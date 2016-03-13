@@ -90,17 +90,6 @@ resource "aws_subnet" "apps-production-1d" {
     }
 }
 
-resource "aws_subnet" "apps-production-1e" {
-    vpc_id                  = "${aws_vpc.apps-production-vpc.id}"
-    cidr_block              = "10.0.192.0/18"
-    availability_zone       = "us-east-1e"
-    map_public_ip_on_launch = true
-
-    tags {
-        "Name" = "apps-production-1e"
-    }
-}
-
 
 
 
@@ -137,17 +126,6 @@ resource "aws_subnet" "apps-staging-1d" {
     }
 }
 
-resource "aws_subnet" "apps-staging-1e" {
-    vpc_id                  = "${aws_vpc.apps-staging-vpc.id}"
-    cidr_block              = "10.1.192.0/18"
-    availability_zone       = "us-east-1e"
-    map_public_ip_on_launch = true
-
-    tags {
-        "Name" = "apps-staging-1e"
-    }
-}
-
 
 
 resource "aws_subnet" "apps-shared-1a" {
@@ -180,17 +158,6 @@ resource "aws_subnet" "apps-shared-1d" {
 
     tags {
         "Name" = "apps-shared-1d"
-    }
-}
-
-resource "aws_subnet" "apps-shared-1e" {
-    vpc_id                  = "${aws_vpc.apps-shared-vpc.id}"
-    cidr_block              = "10.2.192.0/18"
-    availability_zone       = "us-east-1e"
-    map_public_ip_on_launch = true
-
-    tags {
-        "Name" = "apps-shared-1e"
     }
 }
 
@@ -293,10 +260,6 @@ resource "aws_route_table_association" "apps-production-1d-rtbassoc" {
     subnet_id = "${aws_subnet.apps-production-1d.id}"
 }
 
-resource "aws_route_table_association" "apps-production-1e-rtbassoc" {
-    route_table_id = "${aws_route_table.apps-production-rt.id}"
-    subnet_id = "${aws_subnet.apps-production-1e.id}"
-}
 
 
 resource "aws_route_table_association" "apps-staging-1a-rtbassoc" {
@@ -314,10 +277,6 @@ resource "aws_route_table_association" "apps-staging-1d-rtbassoc" {
     subnet_id = "${aws_subnet.apps-staging-1d.id}"
 }
 
-resource "aws_route_table_association" "apps-staging-1e-rtbassoc" {
-    route_table_id = "${aws_route_table.apps-staging-rt.id}"
-    subnet_id = "${aws_subnet.apps-staging-1e.id}"
-}
 
 
 resource "aws_route_table_association" "apps-shared-1a-rtbassoc" {
@@ -333,9 +292,4 @@ resource "aws_route_table_association" "apps-shared-1c-rtbassoc" {
 resource "aws_route_table_association" "apps-shared-1d-rtbassoc" {
     route_table_id = "${aws_route_table.apps-shared-rt.id}"
     subnet_id = "${aws_subnet.apps-shared-1d.id}"
-}
-
-resource "aws_route_table_association" "apps-shared-1e-rtbassoc" {
-    route_table_id = "${aws_route_table.apps-shared-rt.id}"
-    subnet_id = "${aws_subnet.apps-shared-1e.id}"
 }
