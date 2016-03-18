@@ -12,7 +12,7 @@ variable "aws_amis" {
 
 variable "ips" {
   default = {
-    yousef = "193.60.79.171/32"
+    yousef = "86.27.78.158/32"
   }
 }
 

@@ -4,7 +4,7 @@ module "mesos-cluster-staging" {
     # provider vars
     name = "mesos-cluster-staging"
     environment = "staging"
-    master_instance_type = "t2.medium"
+    master_instance_type = "t2.micro"
     slave_instance_type = "t2.medium"
 
     vpc_id = "${aws_vpc.apps-staging-vpc.id}"
@@ -19,7 +19,7 @@ module "mesos-cluster-production" {
     # provider vars
     name = "mesos-cluster-production"
     environment = "production"
-    master_instance_type = "t2.medium"
+    master_instance_type = "t2.micro"
     slave_instance_type = "t2.medium"
 
     vpc_id = "${aws_vpc.apps-production-vpc.id}"

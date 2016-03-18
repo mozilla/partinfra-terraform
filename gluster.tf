@@ -27,12 +27,12 @@ resource "aws_security_group_rule" "gluster-shared-ec2-sg-allowall" {
 resource "aws_launch_configuration" "gluster-shared-ec2-lc" {
   name_prefix = "gluster-shared-ec2-lc-"
   image_id = "${lookup(var.aws_amis, var.aws_region)}"
-  instance_type = "t1.small"
+  instance_type = "t2.micro"
   key_name = "ansible"
   security_groups = ["${aws_security_group.gluster-shared-ec2-sg.id}"]
   associate_public_ip_address = true
   root_block_device {
-    volume_size = 500
+    volume_size = 250
   }
   lifecycle {
     create_before_destroy = true

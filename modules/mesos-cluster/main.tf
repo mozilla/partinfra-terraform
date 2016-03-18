@@ -10,8 +10,8 @@ variable "subnet3" {}
 
 resource "aws_elb" "mesos-elb" {
   name = "mesos-${var.environment}-elb"
-  availability_zones = ["${split(",", lookup(var.aws_availibility_zones, var.aws_region))}"]
   security_groups = ["${aws_security_group.mesos-elb-sg.id}"]
+  subnets = ["${var.subnet1}", "${var.subnet2}", "${var.subnet3}"]
   listener {
     instance_port = 80
     instance_protocol = "http"
@@ -97,7 +97,11 @@ resource "aws_autoscaling_group" "mesos-master-as" {
       value = "${var.environment}"
       propagate_at_launch = true
     }
-
+    tag {
+      key = "Name"
+      value = "mesosmaster"
+      propagate_at_launch = true
+    }
     lifecycle {
       create_before_destroy = true
     }
@@ -122,7 +126,11 @@ resource "aws_autoscaling_group" "mesos-slave-as" {
       value = "${var.environment}"
       propagate_at_launch = true
     }
-
+    tag {
+      key = "Name"
+      value = "mesosslave"
+      propagate_at_launch = true
+    }
     lifecycle {
       create_before_destroy = true
     }

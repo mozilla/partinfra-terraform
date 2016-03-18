@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "consul-shared-ec2-sg-allowall" {
 resource "aws_launch_configuration" "consul-shared-ec2-lc" {
   name_prefix = "consul-shared-ec2-lc-"
   image_id = "${lookup(var.aws_amis, var.aws_region)}"
-  instance_type = "t1.small"
+  instance_type = "t2.micro"
   key_name = "ansible"
   security_groups = ["${aws_security_group.consul-shared-ec2-sg.id}"]
   associate_public_ip_address = true
@@ -58,7 +58,11 @@ resource "aws_autoscaling_group" "consul-shared-ec2-as" {
       value = "shared"
       propagate_at_launch = true
     }
-
+    tag {
+      key = "Name"
+      value = "consul"
+      propagate_at_launch = true
+    }
     lifecycle {
       create_before_destroy = true
     }

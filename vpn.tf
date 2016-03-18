@@ -33,10 +33,11 @@ resource "aws_security_group_rule" "openvpn-ec2-sg-allowall" {
 
 resource "aws_instance" "openvpn-ec2" {
     ami = "${lookup(var.aws_amis, var.aws_region)}"
-    instance_type = "t1.micro"
+    instance_type = "t2.micro"
     disable_api_termination = true
     key_name = "ansible"
     vpc_security_group_ids = ["${aws_security_group.openvpn-ec2-sg.id}"]
+    subnet_id = "${aws_subnet.apps-shared-1c.id}"
 
     tags {
         Name = "openvpn"
