@@ -49,10 +49,14 @@ resource "aws_autoscaling_group" "gluster-shared-ec2-as" {
     vpc_zone_identifier = ["${aws_subnet.apps-shared-1a.id}", "${aws_subnet.apps-shared-1c.id}", "${aws_subnet.apps-shared-1d.id}"]
     tag {
       key = "app"
-      value = "gluster"
+      value = "storage"
       propagate_at_launch = true
     }
-
+    tag {
+      key = "Name"
+      value = "glusterfs"
+      propagate_at_launch = true
+    }
     tag {
       key = "env"
       value = "shared"
