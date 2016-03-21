@@ -1,6 +1,6 @@
 # VPC/Network setup for the entire infra
 provider "aws" {
-  region = "${var.aws_region}"
+  region                          = "${var.aws_region}"
 }
 
 # create VPCs
@@ -11,7 +11,7 @@ resource "aws_vpc" "apps-production-vpc" {
     instance_tenancy     = "default"
 
     tags {
-        "Name" = "apps-production-vpc"
+        "Name"           = "apps-production-vpc"
     }
 }
 
@@ -22,7 +22,7 @@ resource "aws_vpc" "apps-staging-vpc" {
     instance_tenancy     = "default"
 
     tags {
-        "Name" = "apps-staging-vpc"
+        "Name"           = "apps-staging-vpc"
     }
 }
 
@@ -33,7 +33,7 @@ resource "aws_vpc" "apps-shared-vpc" {
     instance_tenancy     = "default"
 
     tags {
-        "Name" = "apps-shared-vpc"
+        "Name"           = "apps-shared-vpc"
     }
 }
 
@@ -42,16 +42,16 @@ resource "aws_vpc" "apps-shared-vpc" {
 
 resource "aws_vpc_peering_connection" "apps-shared-to-production" {
     peer_owner_id = "${var.aws_account_id}"
-    peer_vpc_id = "${aws_vpc.apps-shared-vpc.id}"
-    vpc_id = "${aws_vpc.apps-production-vpc.id}"
-    auto_accept = true
+    peer_vpc_id   = "${aws_vpc.apps-shared-vpc.id}"
+    vpc_id        = "${aws_vpc.apps-production-vpc.id}"
+    auto_accept   = true
 }
 
 resource "aws_vpc_peering_connection" "apps-shared-to-staging" {
     peer_owner_id = "${var.aws_account_id}"
-    peer_vpc_id = "${aws_vpc.apps-shared-vpc.id}"
-    vpc_id = "${aws_vpc.apps-staging-vpc.id}"
-    auto_accept = true
+    peer_vpc_id   = "${aws_vpc.apps-shared-vpc.id}"
+    vpc_id        = "${aws_vpc.apps-staging-vpc.id}"
+    auto_accept   = true
 }
 
 
@@ -64,7 +64,7 @@ resource "aws_subnet" "apps-production-1a" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-production-1a"
+        "Name"              = "apps-production-1a"
     }
 }
 
@@ -75,7 +75,7 @@ resource "aws_subnet" "apps-production-1c" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-production-1c"
+        "Name"              = "apps-production-1c"
     }
 }
 
@@ -86,7 +86,7 @@ resource "aws_subnet" "apps-production-1d" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-production-1d"
+        "Name"              = "apps-production-1d"
     }
 }
 
@@ -100,7 +100,7 @@ resource "aws_subnet" "apps-staging-1a" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-staging-1a"
+        "Name"              = "apps-staging-1a"
     }
 }
 
@@ -111,7 +111,7 @@ resource "aws_subnet" "apps-staging-1c" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-staging-1c"
+        "Name"              = "apps-staging-1c"
     }
 }
 
@@ -122,7 +122,7 @@ resource "aws_subnet" "apps-staging-1d" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-staging-1d"
+        "Name"              = "apps-staging-1d"
     }
 }
 
@@ -135,7 +135,7 @@ resource "aws_subnet" "apps-shared-1a" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-shared-1a"
+        "Name"              = "apps-shared-1a"
     }
 }
 
@@ -146,7 +146,7 @@ resource "aws_subnet" "apps-shared-1c" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-shared-1c"
+        "Name"              = "apps-shared-1c"
     }
 }
 
@@ -157,28 +157,28 @@ resource "aws_subnet" "apps-shared-1d" {
     map_public_ip_on_launch = true
 
     tags {
-        "Name" = "apps-shared-1d"
+        "Name"              = "apps-shared-1d"
     }
 }
 
 # Create internet gateways
 resource "aws_internet_gateway" "apps-production-igw" {
   vpc_id = "${aws_vpc.apps-production-vpc.id}"
-  tags = {
+  tags   = {
     Name = "apps-production-igw"
   }
 }
 
 resource "aws_internet_gateway" "apps-staging-igw" {
   vpc_id = "${aws_vpc.apps-staging-vpc.id}"
-  tags = {
+  tags   = {
     Name = "apps-staging-igw"
   }
 }
 
 resource "aws_internet_gateway" "apps-shared-igw" {
   vpc_id = "${aws_vpc.apps-shared-vpc.id}"
-  tags = {
+  tags   = {
     Name = "apps-shared-igw"
   }
 }
@@ -187,109 +187,109 @@ resource "aws_internet_gateway" "apps-shared-igw" {
 # Set up route tables and associate them with the subnets
 
 resource "aws_route_table" "apps-production-rt" {
-    vpc_id     = "${aws_vpc.apps-production-vpc.id}"
+    vpc_id                        = "${aws_vpc.apps-production-vpc.id}"
 
     route {
-        cidr_block = "${aws_vpc.apps-shared-vpc.cidr_block}"
+        cidr_block                = "${aws_vpc.apps-shared-vpc.cidr_block}"
         vpc_peering_connection_id = "${aws_vpc_peering_connection.apps-shared-to-production.id}"
     }
 
     route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = "${aws_internet_gateway.apps-production-igw.id}"
+        cidr_block                = "0.0.0.0/0"
+        gateway_id                = "${aws_internet_gateway.apps-production-igw.id}"
     }
 
     tags {
-        "Name" = "apps-production-rt"
+        "Name"                    = "apps-production-rt"
     }
 }
 
 resource "aws_route_table" "apps-staging-rt" {
-    vpc_id     = "${aws_vpc.apps-staging-vpc.id}"
+    vpc_id                        = "${aws_vpc.apps-staging-vpc.id}"
 
     route {
-        cidr_block = "${aws_vpc.apps-shared-vpc.cidr_block}"
+        cidr_block                = "${aws_vpc.apps-shared-vpc.cidr_block}"
         vpc_peering_connection_id = "${aws_vpc_peering_connection.apps-shared-to-staging.id}"
     }
 
     route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = "${aws_internet_gateway.apps-staging-igw.id}"
+        cidr_block                = "0.0.0.0/0"
+        gateway_id                = "${aws_internet_gateway.apps-staging-igw.id}"
     }
 
     tags {
-        "Name" = "apps-staging-rt"
+        "Name"                    = "apps-staging-rt"
     }
 }
 
 resource "aws_route_table" "apps-shared-rt" {
-    vpc_id     = "${aws_vpc.apps-shared-vpc.id}"
+    vpc_id                        = "${aws_vpc.apps-shared-vpc.id}"
 
     route {
-        cidr_block = "${aws_vpc.apps-production-vpc.cidr_block}"
+        cidr_block                = "${aws_vpc.apps-production-vpc.cidr_block}"
         vpc_peering_connection_id = "${aws_vpc_peering_connection.apps-shared-to-production.id}"
     }
 
     route {
-        cidr_block = "${aws_vpc.apps-staging-vpc.cidr_block}"
+        cidr_block                = "${aws_vpc.apps-staging-vpc.cidr_block}"
         vpc_peering_connection_id = "${aws_vpc_peering_connection.apps-shared-to-staging.id}"
     }
 
     route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = "${aws_internet_gateway.apps-shared-igw.id}"
+        cidr_block                = "0.0.0.0/0"
+        gateway_id                = "${aws_internet_gateway.apps-shared-igw.id}"
     }
 
     tags {
-        "Name" = "apps-shared-rt"
+        "Name"                    = "apps-shared-rt"
     }
 }
 
 resource "aws_route_table_association" "apps-production-1a-rtbassoc" {
     route_table_id = "${aws_route_table.apps-production-rt.id}"
-    subnet_id = "${aws_subnet.apps-production-1a.id}"
+    subnet_id      = "${aws_subnet.apps-production-1a.id}"
 }
 
 resource "aws_route_table_association" "apps-production-1c-rtbassoc" {
     route_table_id = "${aws_route_table.apps-production-rt.id}"
-    subnet_id = "${aws_subnet.apps-production-1c.id}"
+    subnet_id      = "${aws_subnet.apps-production-1c.id}"
 }
 
 resource "aws_route_table_association" "apps-production-1d-rtbassoc" {
     route_table_id = "${aws_route_table.apps-production-rt.id}"
-    subnet_id = "${aws_subnet.apps-production-1d.id}"
+    subnet_id      = "${aws_subnet.apps-production-1d.id}"
 }
 
 
 
 resource "aws_route_table_association" "apps-staging-1a-rtbassoc" {
     route_table_id = "${aws_route_table.apps-staging-rt.id}"
-    subnet_id = "${aws_subnet.apps-staging-1a.id}"
+    subnet_id      = "${aws_subnet.apps-staging-1a.id}"
 }
 
 resource "aws_route_table_association" "apps-staging-1c-rtbassoc" {
     route_table_id = "${aws_route_table.apps-staging-rt.id}"
-    subnet_id = "${aws_subnet.apps-staging-1c.id}"
+    subnet_id      = "${aws_subnet.apps-staging-1c.id}"
 }
 
 resource "aws_route_table_association" "apps-staging-1d-rtbassoc" {
     route_table_id = "${aws_route_table.apps-staging-rt.id}"
-    subnet_id = "${aws_subnet.apps-staging-1d.id}"
+    subnet_id      = "${aws_subnet.apps-staging-1d.id}"
 }
 
 
 
 resource "aws_route_table_association" "apps-shared-1a-rtbassoc" {
     route_table_id = "${aws_route_table.apps-shared-rt.id}"
-    subnet_id = "${aws_subnet.apps-shared-1a.id}"
+    subnet_id      = "${aws_subnet.apps-shared-1a.id}"
 }
 
 resource "aws_route_table_association" "apps-shared-1c-rtbassoc" {
     route_table_id = "${aws_route_table.apps-shared-rt.id}"
-    subnet_id = "${aws_subnet.apps-shared-1c.id}"
+    subnet_id      = "${aws_subnet.apps-shared-1c.id}"
 }
 
 resource "aws_route_table_association" "apps-shared-1d-rtbassoc" {
     route_table_id = "${aws_route_table.apps-shared-rt.id}"
-    subnet_id = "${aws_subnet.apps-shared-1d.id}"
+    subnet_id      = "${aws_subnet.apps-shared-1d.id}"
 }
