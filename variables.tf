@@ -22,3 +22,7 @@ variable "aws_availibility_zones" {
     eu-west-1 = "eu-west-1a,eu-west-1b,eu-west-1c"
   }
 }
+
+variable "aws_account_id" {
+  default = "484535289196"
+}

@@ -41,14 +41,14 @@ resource "aws_vpc" "apps-shared-vpc" {
 # create vpc peers
 
 resource "aws_vpc_peering_connection" "apps-shared-to-production" {
-    peer_owner_id = "484535289196"
+    peer_owner_id = "${var.aws_account_id}"
     peer_vpc_id = "${aws_vpc.apps-shared-vpc.id}"
     vpc_id = "${aws_vpc.apps-production-vpc.id}"
     auto_accept = true
 }
 
 resource "aws_vpc_peering_connection" "apps-shared-to-staging" {
-    peer_owner_id = "484535289196"
+    peer_owner_id = "${var.aws_account_id}"
     peer_vpc_id = "${aws_vpc.apps-shared-vpc.id}"
     vpc_id = "${aws_vpc.apps-staging-vpc.id}"
     auto_accept = true

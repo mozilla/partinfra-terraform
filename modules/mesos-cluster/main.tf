@@ -24,7 +24,7 @@ resource "aws_elb" "mesos-elb" {
     instance_protocol = "http"
     lb_port = 443
     lb_protocol = "https"
-    ssl_certificate_id = "arn:aws:iam::484535289196:server-certificate/wildcard-mozilla-community-ops-services"
+    ssl_certificate_id = "arn:aws:iam::${var.aws_account_id}:server-certificate/wildcard-mozilla-community-ops-services"
   }
 
   health_check {
