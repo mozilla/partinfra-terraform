@@ -1,6 +1,6 @@
 variable "aws_region" {
   description = "AWS region to launch servers."
-  default = "us-east-1"
+  default     = "us-east-1"
 }
 
 # Ubuntu 14.04 LTS (x64)
@@ -21,4 +21,8 @@ variable "aws_availibility_zones" {
     us-east-1 = "us-east-1a,us-east-1c,us-east-1d"
     eu-west-1 = "eu-west-1a,eu-west-1b,eu-west-1c"
   }
+}
+
+variable "aws_account_id" {
+  default = "484535289196"
 }

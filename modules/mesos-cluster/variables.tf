@@ -1,1 +1,1 @@
-/home/yousef/Projects/partinfra-terraform/variables.tf
+../../variables.tf
