@@ -9,7 +9,7 @@ resource "aws_security_group_rule" "consul-shared-ec2-sg-allowallfromprodstaging
     from_port         = 0
     to_port           = 0
     protocol          = "-1"
-    cidr_blocks       = ["${aws_vpc.apps-staging-vpc.cidr_block}", "${aws_vpc.apps-production-vpc.cidr_block}"]
+    cidr_blocks       = ["${aws_vpc.apps-staging-vpc.cidr_block}", "${aws_vpc.apps-production-vpc.cidr_block}", "${aws_vpc.apps-shared-vpc.cidr_block}"]
 
     security_group_id = "${aws_security_group.consul-shared-ec2-sg.id}"
 }
