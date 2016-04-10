@@ -54,7 +54,57 @@ resource "aws_vpc_peering_connection" "apps-shared-to-staging" {
     auto_accept   = true
 }
 
+resource "aws_vpc_peering_connection" "apps-staging-to-production" {
+    peer_owner_id = "${var.aws_account_id}"
+    peer_vpc_id   = "${aws_vpc.apps-staging-vpc.id}"
+    vpc_id        = "${aws_vpc.apps-production-vpc.id}"
+    auto_accept   = true
+}
 
+# Create ACL rules to allow consul traffic between staging and prod but nothing else
+resource "aws_network_acl_rule" "apps-staging-denyallproduction" {
+    network_acl_id = "${aws_vpc.apps-staging-vpc.default_network_acl_id}"
+    rule_number    = 90
+    egress         = false
+    protocol       = "-1"
+    rule_action    = "deny"
+    cidr_block     = "${aws_vpc.apps-production-vpc.cidr_block}"
+    from_port      = 0
+    to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "apps-production-denyallstaging" {
+    network_acl_id = "${aws_vpc.apps-production-vpc.default_network_acl_id}"
+    rule_number    = 90
+    egress         = false
+    protocol       = "-1"
+    rule_action    = "deny"
+    cidr_block     = "${aws_vpc.apps-staging-vpc.cidr_block}"
+    from_port      = 0
+    to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "apps-production-allowserffromstaging" {
+    network_acl_id = "${aws_vpc.apps-production-vpc.default_network_acl_id}"
+    rule_number    = 30
+    egress         = false
+    protocol       = "-1"
+    rule_action    = "allow"
+    cidr_block     = "${aws_vpc.apps-staging-vpc.cidr_block}"
+    from_port      = 8300
+    to_port        = 8302
+}
+
+resource "aws_network_acl_rule" "apps-staging-allowserffromproduction" {
+    network_acl_id = "${aws_vpc.apps-staging-vpc.default_network_acl_id}"
+    rule_number    = 30
+    egress         = false
+    protocol       = "-1"
+    rule_action    = "allow"
+    cidr_block     = "${aws_vpc.apps-production-vpc.cidr_block}"
+    from_port      = 8300
+    to_port        = 8302
+}
 # Create Subnets
 
 resource "aws_subnet" "apps-production-1a" {
@@ -195,6 +245,11 @@ resource "aws_route_table" "apps-production-rt" {
     }
 
     route {
+        cidr_block                = "${aws_vpc.apps-staging-vpc.cidr_block}"
+        vpc_peering_connection_id = "${aws_vpc_peering_connection.apps-staging-to-production.id}"
+    }
+
+    route {
         cidr_block                = "0.0.0.0/0"
         gateway_id                = "${aws_internet_gateway.apps-production-igw.id}"
     }
@@ -210,6 +265,11 @@ resource "aws_route_table" "apps-staging-rt" {
     route {
         cidr_block                = "${aws_vpc.apps-shared-vpc.cidr_block}"
         vpc_peering_connection_id = "${aws_vpc_peering_connection.apps-shared-to-staging.id}"
+    }
+
+    route {
+        cidr_block                = "${aws_vpc.apps-production-vpc.cidr_block}"
+        vpc_peering_connection_id = "${aws_vpc_peering_connection.apps-staging-to-production.id}"
     }
 
     route {
