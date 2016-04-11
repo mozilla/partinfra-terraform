@@ -66,7 +66,7 @@ resource "aws_network_acl_rule" "apps-staging-denyallproduction" {
     network_acl_id = "${aws_vpc.apps-staging-vpc.default_network_acl_id}"
     rule_number    = 90
     egress         = false
-    protocol       = "-1"
+    protocol       = "all"
     rule_action    = "deny"
     cidr_block     = "${aws_vpc.apps-production-vpc.cidr_block}"
     from_port      = 0
@@ -77,29 +77,51 @@ resource "aws_network_acl_rule" "apps-production-denyallstaging" {
     network_acl_id = "${aws_vpc.apps-production-vpc.default_network_acl_id}"
     rule_number    = 90
     egress         = false
-    protocol       = "-1"
+    protocol       = "all"
     rule_action    = "deny"
     cidr_block     = "${aws_vpc.apps-staging-vpc.cidr_block}"
     from_port      = 0
     to_port        = 65535
 }
 
-resource "aws_network_acl_rule" "apps-production-allowserffromstaging" {
+resource "aws_network_acl_rule" "apps-production-allowserftcpfromstaging" {
     network_acl_id = "${aws_vpc.apps-production-vpc.default_network_acl_id}"
     rule_number    = 30
     egress         = false
-    protocol       = "-1"
+    protocol       = "tcp"
     rule_action    = "allow"
     cidr_block     = "${aws_vpc.apps-staging-vpc.cidr_block}"
     from_port      = 8300
     to_port        = 8302
 }
 
-resource "aws_network_acl_rule" "apps-staging-allowserffromproduction" {
+resource "aws_network_acl_rule" "apps-production-allowserfudpfromstaging" {
+    network_acl_id = "${aws_vpc.apps-production-vpc.default_network_acl_id}"
+    rule_number    = 31
+    egress         = false
+    protocol       = "udp"
+    rule_action    = "allow"
+    cidr_block     = "${aws_vpc.apps-staging-vpc.cidr_block}"
+    from_port      = 8300
+    to_port        = 8302
+}
+
+resource "aws_network_acl_rule" "apps-staging-allowserftcpfromproduction" {
     network_acl_id = "${aws_vpc.apps-staging-vpc.default_network_acl_id}"
     rule_number    = 30
     egress         = false
-    protocol       = "-1"
+    protocol       = "tcp"
+    rule_action    = "allow"
+    cidr_block     = "${aws_vpc.apps-production-vpc.cidr_block}"
+    from_port      = 8300
+    to_port        = 8302
+}
+
+resource "aws_network_acl_rule" "apps-staging-allowserfudpfromproduction" {
+    network_acl_id = "${aws_vpc.apps-staging-vpc.default_network_acl_id}"
+    rule_number    = 31
+    egress         = false
+    protocol       = "udp"
     rule_action    = "allow"
     cidr_block     = "${aws_vpc.apps-production-vpc.cidr_block}"
     from_port      = 8300
