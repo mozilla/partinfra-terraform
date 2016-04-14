@@ -26,3 +26,7 @@ variable "aws_availibility_zones" {
 variable "aws_account_id" {
   default = "484535289196"
 }
+
+variable "paas-mozilla-community-zone-id" {
+  default = "Z1BZGUW286G7FF"
+}

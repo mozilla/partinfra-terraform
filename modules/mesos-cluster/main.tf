@@ -47,6 +47,14 @@ resource "aws_elb" "mesos-elb" {
   }
 }
 
+resource "aws_route53_record" "paas-default-dns-zone" {
+  zone_id =  "${var.paas-mozilla-community-zone-id}"
+  name = "*.${var.environment}"
+  type = "CNAME"
+  ttl = 300
+  records = ["${aws_elb.mesos-elb.main.dns_name}"]
+}
+
 resource "aws_launch_configuration" "mesos-master-ec2-lc" {
   name_prefix                 = "mesos-master-${var.environment}-lc-"
   image_id                    = "${lookup(var.aws_amis, var.aws_region)}"
