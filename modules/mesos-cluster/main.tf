@@ -52,7 +52,7 @@ resource "aws_route53_record" "paas-default-dns-zone" {
   name = "*.${var.environment}"
   type = "CNAME"
   ttl = 300
-  records = ["${aws_elb.mesos-elb.main.dns_name}"]
+  records = ["${aws_elb.mesos-elb.dns_name}"]
 }
 
 resource "aws_launch_configuration" "mesos-master-ec2-lc" {
