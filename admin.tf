@@ -20,7 +20,7 @@ resource "aws_security_group_rule" "admin-ec2-sg-allowallhttp" {
     from_port                = 80
     to_port                  = 80
     protocol                 = "tcp"
-    source_security_group_id = "${aws_security_group.openvpn-ec2-sg.id}"
+    cidr_blocks              = ["${aws_vpc.apps-shared-vpc.cidr_block}"]
     security_group_id        = "${aws_security_group.admin-ec2-sg.id}"
 }
 
