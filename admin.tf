@@ -1,3 +1,8 @@
+resource "aws_iam_instance_profile" "admin-ec2-profile" {
+    name = "admin-ec2-profile"
+    roles = ["admin-ec2-role"]
+}
+
 resource "aws_security_group" "admin-ec2-sg" {
     name                    = "admin-ec2-sg"
     description             = "admin SG"
@@ -40,6 +45,7 @@ resource "aws_instance" "admin-ec2" {
     key_name                = "ansible"
     vpc_security_group_ids  = ["${aws_security_group.admin-ec2-sg.id}"]
     subnet_id               = "${aws_subnet.apps-shared-1c.id}"
+    iam_instance_profile    = "${aws_iam_instance_profile.admin-ec2-profile.name}"
 
     tags {
         Name                = "admin"
