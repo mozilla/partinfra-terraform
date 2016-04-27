@@ -132,3 +132,7 @@ resource "aws_security_group_rule" "mesos-slave-ec2-sg-allowallfromshared" {
 
     security_group_id = "${aws_security_group.mesos-slave-ec2-sg.id}"
 }
+
+output "mesos-cluster-slave-sg-id" {
+    value = "${aws_security_group.mesos-slave-ec2-sg.id}"
+}
