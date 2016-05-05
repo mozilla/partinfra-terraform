@@ -47,7 +47,7 @@ resource "aws_db_instance" "mysql-shared-db" {
   multi_az             = true
   storage_type         = "gp2"
   final_snapshot_identifier = "mysql-shared-db-final"
-  name                 = "mysql-shared-db"
+  name                 = "mysqlshareddb"
   username             = "root"
   password             = "${var.mysql-shared-db_password}"
   vpc_security_group_ids = ["${aws_security_group.shared-rds-sg.id}"]
