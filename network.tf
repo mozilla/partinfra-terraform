@@ -1,8 +1,4 @@
 # VPC/Network setup for the entire infra
-provider "aws" {
-  region                          = "${var.aws_region}"
-}
-
 # create VPCs
 resource "aws_vpc" "apps-production-vpc" {
     cidr_block           = "10.0.0.0/16"
