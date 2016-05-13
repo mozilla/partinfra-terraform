@@ -60,3 +60,11 @@ resource "aws_db_instance" "mysql-shared-db" {
       project             = "partinfra"
   }
 }
+
+resource "aws_route53_record" "mysql-shared-dns" {
+  zone_id =  "${var.paas-mozilla-community-zone-id}"
+  name = "mysql-shared-db"
+  type = "CNAME"
+  ttl = 300
+  records = ["${aws_db_instance.mysql-shared-db.address}"]
+}
