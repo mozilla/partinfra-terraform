@@ -92,7 +92,7 @@ resource "aws_autoscaling_group" "mesos-master-as" {
     max_size                = 5
     desired_capacity        = 3
     min_size                = 3
-    load_balancers          = ["${aws_elb.mesos-elb.id}"]
+    load_balancers          = ["${aws_elb.mesos-elb.id}", "${aws_elb.community-sites-elb.id}"]
     vpc_zone_identifier     = ["${var.subnet1}", "${var.subnet2}", "${var.subnet3}"]
     tag {
       key                   = "app"
@@ -142,4 +142,43 @@ resource "aws_autoscaling_group" "mesos-slave-as" {
     lifecycle {
       create_before_destroy = true
     }
+}
+
+resource "aws_elb" "community-sites-elb" {
+  name                        = "community-sites-${var.environment}-elb"
+  security_groups             = ["${aws_security_group.mesos-elb-sg.id}"]
+  subnets                     = ["${var.subnet1}", "${var.subnet2}", "${var.subnet3}"]
+  listener {
+    instance_port             = 80
+    instance_protocol         = "http"
+    lb_port                   = 80
+    lb_protocol               = "http"
+  }
+
+  listener {
+    instance_port             = 80
+    instance_protocol         = "http"
+    lb_port                   = 443
+    lb_protocol               = "https"
+    ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/00e371ce-a96e-435b-9e76-f659d23bb356"
+  }
+
+  health_check {
+    healthy_threshold         = 2
+    unhealthy_threshold       = 2
+    timeout                   = 3
+    target                    = "TCP:80"
+    interval                  = 30
+  }
+
+  cross_zone_load_balancing   = true
+  idle_timeout                = 400
+  connection_draining         = true
+  connection_draining_timeout = 400
+
+  tags {
+    Name                      = "community-sites-elb"
+    app                       = "mesos-cluster"
+    env                       = "${var.environment}"
+  }
 }
