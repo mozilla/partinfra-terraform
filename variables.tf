@@ -7,6 +7,7 @@ variable "aws_region" {
 variable "aws_amis" {
   default = {
     us-east-1 = "ami-fce3c696"
+    admin-node-2016-07-15 = "ami-68d8557f"
   }
 }
 

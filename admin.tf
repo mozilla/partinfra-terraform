@@ -49,13 +49,18 @@ resource "aws_security_group_rule" "admin-ec2-sg-allowallegress" {
 }
 
 resource "aws_instance" "admin-ec2" {
-    ami                     = "${lookup(var.aws_amis, var.aws_region)}"
+    ami                     = "${lookup(var.aws_amis, "admin-node-2016-07-15")}"  # For bug 1285306
     instance_type           = "t2.micro"
     disable_api_termination = true
     key_name                = "ansible"
     vpc_security_group_ids  = ["${aws_security_group.admin-ec2-sg.id}"]
     subnet_id               = "${aws_subnet.apps-shared-1c.id}"
     iam_instance_profile    = "${aws_iam_instance_profile.admin-ec2-profile.name}"
+
+    root_block_device {
+      volume_type = "standard"
+      volume_size = 20
+    }
 
     tags {
         Name                = "admin"
