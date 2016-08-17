@@ -35,7 +35,7 @@ resource "aws_subnet" "bitergia-metrics-private-subnet-1a" {
     provider                 = "aws.us-west-1"
     vpc_id                   = "${aws_vpc.bitergia-metrics-vpc.id}"
     cidr_block               = "10.0.128.0/18"
-    availability_zone        = "us-east-1a"
+    availability_zone        = "us-west-1a"
     map_public_ip_on_launch  = true
 
     tags {
@@ -46,11 +46,11 @@ resource "aws_subnet" "bitergia-metrics-private-subnet-1a" {
     }
 }
 
-resource "aws_subnet" "bitergia-metrics-private-subnet-1c" {
+resource "aws_subnet" "bitergia-metrics-private-subnet-1b" {
     provider                 = "aws.us-west-1"
     vpc_id                   = "${aws_vpc.bitergia-metrics-vpc.id}"
     cidr_block               = "10.0.192.0/18"
-    availability_zone        = "us-east-1c"
+    availability_zone        = "us-west-1b"
     map_public_ip_on_launch  = true
 
     tags {
@@ -100,7 +100,7 @@ resource "aws_db_subnet_group" "bitergia-rds-subnetgroup" {
     provider                 = "aws.us-west-1"
     name                     = "bitergia-rds-subnetgroup"
     description              = "RDS subnet group for Bitergia"
-    subnet_ids               = ["${aws_subnet.bitergia-metrics-private-subnet-1a.id}", "${aws_subnet.bitergia-metrics-private-subnet-1c.id}"]
+    subnet_ids               = ["${aws_subnet.bitergia-metrics-private-subnet-1a.id}", "${aws_subnet.bitergia-metrics-private-subnet-1b.id}"]
     tags {
         "Name"               = "bitergia-rds-subnetgroup"
         "app"                = "bitergia"
