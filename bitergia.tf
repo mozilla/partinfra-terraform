@@ -115,7 +115,7 @@ resource "aws_db_instance" "bitergia-production-db" {
   allocated_storage    = 10
   engine               = "mariadb"
   engine_version       = "10.0.24"
-  instance_class       = "db.t2.large"
+  instance_class       = "db.t2.medium"
   publicly_accessible  = false
   backup_retention_period = 7
   apply_immediately    = true
