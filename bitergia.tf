@@ -20,7 +20,7 @@ resource "aws_subnet" "bitergia-metrics-public-subnet" {
     provider                 = "aws.us-west-1"
     vpc_id                   = "${aws_vpc.bitergia-metrics-vpc.id}"
     cidr_block               = "10.0.0.0/17"
-    availability_zone        = "us-east-1a"
+    availability_zone        = "us-west-1a"
     map_public_ip_on_launch  = true
 
     tags {
