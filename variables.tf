@@ -8,6 +8,7 @@ variable "aws_amis" {
   default = {
     us-east-1 = "ami-fce3c696"
     admin-node-2016-07-15 = "ami-68d8557f"
+    debian-jessie-8-4 = "ami-c8bda8a2"
   }
 }
 
