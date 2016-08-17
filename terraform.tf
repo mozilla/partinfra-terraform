@@ -4,6 +4,11 @@ provider "aws" {
   region = "${var.aws_region}"
 }
 
+provider "aws" {
+  alias = "us-west-1"
+  region = "us-west-1"
+}
+
 resource "terraform_remote_state" "s3" {
     backend    = "s3"
     config {
