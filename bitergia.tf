@@ -134,3 +134,50 @@ resource "aws_db_instance" "bitergia-production-db" {
       project             = "metrics"
   }
 }
+
+# EC2
+resource "aws_security_group" "bitergia-ec2-sg" {
+    name                    = "bitergia-ec2-sg"
+    description             = "Bitergia SG"
+    vpc_id                  = "${aws_vpc.bitergia-metrics-vpc.id}"
+}
+
+resource "aws_security_group_rule" "bitergia-ec2-sg-allowallin" {
+    type                    = "ingress"
+    from_port               = 0
+    to_port                 = 0
+    protocol                = "-1"
+    cidr_blocks             = ["0.0.0.0/0"]
+    security_group_id       = "${aws_security_group.bitergia-ec2-sg.id}"
+}
+
+resource "aws_security_group_rule" "bitergia-ec2-sg-allowall" {
+    type              = "egress"
+    from_port         = 0
+    to_port           = 0
+    protocol          = "-1"
+    cidr_blocks       = ["0.0.0.0/0"]
+
+    security_group_id = "${aws_security_group.bitergia-ec2-sg.id}"
+}
+
+resource "aws_instance" "bitergia-ec2" {
+    ami                     = "${lookup(var.aws_amis, "debian-jessie-8-4")}"
+    instance_type           = "r3.large"
+    disable_api_termination = false
+    key_name                = "bitergia"
+    vpc_security_group_ids  = ["${aws_security_group.bitergia-ec2-sg.id}"]
+    subnet_id               = "${aws_subnet.bitergia-metrics-public-subnet.id}"
+
+    root_block_device {
+      volume_type = "standard"
+      volume_size = 500
+    }
+
+    tags {
+        Name                = "bitergia"
+        app                 = "bitergia"
+        env                 = "production"
+        project             = "metrics"
+    }
+}
