@@ -259,15 +259,15 @@ resource "aws_elb" "bitergia-elb" {
   instances                   = ["${aws_instance.bitergia-ec2.id}"]
 
   listener {
-    instance_port             = 80
-    instance_protocol         = "http"
+    instance_port             = 443
+    instance_protocol         = "https"
     lb_port                   = 80
     lb_protocol               = "http"
   }
 
   listener {
-    instance_port             = 80
-    instance_protocol         = "http"
+    instance_port             = 443
+    instance_protocol         = "https"
     lb_port                   = 443
     lb_protocol               = "https"
     ssl_certificate_id        = "arn:aws:acm:us-west-1:${var.aws_account_id}:certificate/e24546b9-d962-4d91-b807-aec1d2fd9372"
