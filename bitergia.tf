@@ -211,3 +211,85 @@ resource "aws_instance" "bitergia-ec2" {
         project              = "metrics"
     }
 }
+
+# ELB
+
+resource "aws_security_group" "bitergia-elb-sg" {
+  provider                    = "aws.us-west-1"
+  name                        = "bitergia-production-elb-sg"
+  description                 = "Bitergia ELB SG"
+  vpc_id                      = "${aws_vpc.bitergia-metrics-vpc.id}"
+}
+
+resource "aws_security_group_rule" "bitergia-elb-sg-allowhttp" {
+  provider                    = "aws.us-west-1"
+  type                        = "ingress"
+  from_port                   = 80
+  to_port                     = 80
+  protocol                    = "tcp"
+  cidr_blocks                 = ["0.0.0.0/0"]
+  security_group_id           = "${aws_security_group.bitergia-elb-sg.id}"
+}
+
+resource "aws_security_group_rule" "bitergia-elb-sg-allowhttps" {
+  provider                    = "aws.us-west-1"
+  type                        = "ingress"
+  from_port                   = 443
+  to_port                     = 443
+  protocol                    = "tcp"
+  cidr_blocks                 = ["0.0.0.0/0"]
+  security_group_id           = "${aws_security_group.bitergia-elb-sg.id}"
+}
+
+resource "aws_security_group_rule" "bitergia-elb-sg-allowall" {
+  provider                    = "aws.us-west-1"
+  type                        = "egress"
+  from_port                   = 0
+  to_port                     = 0
+  protocol                    = "-1"
+  cidr_blocks                 = ["0.0.0.0/0"]
+  security_group_id           = "${aws_security_group.bitergia-elb-sg.id}"
+}
+
+resource "aws_elb" "bitergia-elb" {
+  provider                    = "aws.us-west-1"
+  name                        = "bitergia-elb"
+  security_groups             = ["${aws_security_group.bitergia-elb-sg.id}"]
+  subnets                     = ["${aws_subnet.bitergia-metrics-public-subnet.id}"]
+  instances                   = ["${aws_instance.bitergia-ec2.id}"]
+
+  listener {
+    instance_port             = 80
+    instance_protocol         = "http"
+    lb_port                   = 80
+    lb_protocol               = "http"
+  }
+
+  listener {
+    instance_port             = 80
+    instance_protocol         = "http"
+    lb_port                   = 443
+    lb_protocol               = "https"
+    ssl_certificate_id        = "arn:aws:acm:us-west-1:${var.aws_account_id}:certificate/e24546b9-d962-4d91-b807-aec1d2fd9372"
+  }
+
+  health_check {
+    healthy_threshold         = 2
+    unhealthy_threshold       = 2
+    timeout                   = 3
+    target                    = "TCP:80"
+    interval                  = 30
+  }
+
+  cross_zone_load_balancing   = false
+  idle_timeout                = 400
+  connection_draining         = true
+  connection_draining_timeout = 400
+
+  tags {
+    Name                      = "bitergia-elb"
+    app                       = "bitergia"
+    env                       = "production"
+    project                   = "metrics"
+  }
+}
