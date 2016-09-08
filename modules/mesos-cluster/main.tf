@@ -160,7 +160,7 @@ resource "aws_elb" "community-sites-elb" {
     instance_protocol         = "http"
     lb_port                   = 443
     lb_protocol               = "https"
-    ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/00e371ce-a96e-435b-9e76-f659d23bb356"
+    ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/10d6f20b-ca56-4c4b-b0f7-9ea878dbc1c2"
   }
 
   health_check {
