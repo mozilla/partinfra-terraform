@@ -15,7 +15,7 @@ resource "aws_security_group_rule" "sensu-redis-sg-allowredisfromall" {
   from_port            = 6379
   to_port              = 6379
   protocol             = "tcp"
-  cidr_blocks          = ["${aws_vpc.apps-production-vpc.cidr_block}", "${aws_vpc.apps-staging-vpc.cidr_block}, ${aws_vpc.apps-shared-vpc.cidr_block}"]
+  cidr_blocks          = ["${aws_vpc.apps-production-vpc.cidr_block}", "${aws_vpc.apps-staging-vpc.cidr_block}", "${aws_vpc.apps-shared-vpc.cidr_block}"]
 
   security_group_id    = "${aws_security_group.sensu-redis-sg.id}"
 }
@@ -25,7 +25,7 @@ resource "aws_security_group_rule" "sensu-redis-sg-allowegress" {
   from_port            = 0
   to_port              = 0
   protocol             = "-1"
-  cidr_blocks          = ["${aws_vpc.apps-production-vpc.cidr_block}", "${aws_vpc.apps-staging-vpc.cidr_block}, ${aws_vpc.apps-shared-vpc.cidr_block}"]
+  cidr_blocks          = ["${aws_vpc.apps-production-vpc.cidr_block}", "${aws_vpc.apps-staging-vpc.cidr_block}", "${aws_vpc.apps-shared-vpc.cidr_block}"]
 
   security_group_id    = "${aws_security_group.sensu-redis-sg.id}"
 }
