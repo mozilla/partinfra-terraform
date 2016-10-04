@@ -85,7 +85,7 @@ resource "aws_security_group_rule" "admin-elb-sg-allowhttps" {
     cidr_blocks       = [
         "${aws_vpc.apps-shared-vpc.cidr_block}",
         "${aws_vpc.apps-staging-vpc.cidr_block}",
-        "${aws_vpc.apps-staging-vpc.cidr_block}"
+        "${aws_vpc.apps-production-vpc.cidr_block}"
     ]
 
     security_group_id = "${aws_security_group.admin-elb-sg.id}"
@@ -99,7 +99,7 @@ resource "aws_security_group_rule" "admin-elb-sg-allowall" {
     cidr_blocks       = [
       "${aws_vpc.apps-shared-vpc.cidr_block}",
       "${aws_vpc.apps-staging-vpc.cidr_block}",
-      "${aws_vpc.apps-staging-vpc.cidr_block}"
+      "${aws_vpc.apps-production-vpc.cidr_block}"
     ]
 
     security_group_id = "${aws_security_group.admin-elb-sg.id}"
