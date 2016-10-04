@@ -82,16 +82,25 @@ resource "aws_security_group_rule" "admin-elb-sg-allowhttps" {
     from_port         = 443
     to_port           = 443
     protocol          = "tcp"
-    cidr_blocks       = ["0.0.0.0/0"]
+    cidr_blocks       = [
+        "${aws_vpc.apps-shared-vpc.cidr_block}",
+        "${aws_vpc.apps-staging-vpc.cidr_block}",
+        "${aws_vpc.apps-staging-vpc.cidr_block}"
+    ]
 
     security_group_id = "${aws_security_group.admin-elb-sg.id}"
 }
+
 resource "aws_security_group_rule" "admin-elb-sg-allowall" {
     type              = "egress"
     from_port         = 0
     to_port           = 0
     protocol          = "-1"
-    cidr_blocks       = ["0.0.0.0/0"]
+    cidr_blocks       = [
+      "${aws_vpc.apps-shared-vpc.cidr_block}",
+      "${aws_vpc.apps-staging-vpc.cidr_block}",
+      "${aws_vpc.apps-staging-vpc.cidr_block}"
+    ]
 
     security_group_id = "${aws_security_group.admin-elb-sg.id}"
 }
@@ -100,6 +109,7 @@ resource "aws_elb" "admin-elb" {
   name                        = "admin-elb"
   security_groups             = ["${aws_security_group.admin-elb-sg.id}"]
   subnets                     = ["${aws_subnet.apps-shared-1c.id}"]
+  internal                    = true
 
   listener {
     instance_port             = 80
