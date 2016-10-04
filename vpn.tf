@@ -17,7 +17,7 @@ resource "aws_security_group_rule" "openvpn-ec2-sg-allowssh" {
     from_port               = 22
     to_port                 = 22
     protocol                = "tcp"
-    cidr_blocks             = ["${var.ips.yousef}"]
+    cidr_blocks             = ["${var.ips["yousef"]}"]
 
     security_group_id       = "${aws_security_group.openvpn-ec2-sg.id}"
 }
