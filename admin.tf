@@ -9,27 +9,25 @@ resource "aws_security_group" "admin-ec2-sg" {
     vpc_id                  = "${aws_vpc.apps-shared-vpc.id}"
 }
 
-resource "aws_security_group_rule" "admin-ec2-sg-allowall" {
+resource "aws_security_group_rule" "admin-ec2-sg-allowsharedssh" {
     type                    = "ingress"
     from_port               = 22
     to_port                 = 22
     protocol                = "tcp"
-    cidr_blocks             = ["${aws_vpc.apps-staging-vpc.cidr_block}",
-                               "${aws_vpc.apps-production-vpc.cidr_block}",
-                               "${aws_vpc.apps-shared-vpc.cidr_block}"]
+    cidr_blocks             = ["${aws_vpc.apps-shared-vpc.cidr_block}"]
     security_group_id       = "${aws_security_group.admin-ec2-sg.id}"
 }
 
-resource "aws_security_group_rule" "admin-ec2-sg-allowallhttp" {
-    type                     = "ingress"
-    from_port                = 80
-    to_port                  = 80
-    protocol                 = "tcp"
-    cidr_blocks              = ["${aws_vpc.apps-shared-vpc.cidr_block}"]
-    security_group_id        = "${aws_security_group.admin-ec2-sg.id}"
+resource "aws_security_group_rule" "admin-ec2-sg-allowsharedjenkins" {
+  type                     = "ingress"
+  from_port                = 8081
+  to_port                  = 8081
+  protocol                 = "tcp"
+  cidr_blocks              = ["${aws_vpc.apps-shared-vpc.cidr_block}"]
+  security_group_id        = "${aws_security_group.admin-ec2-sg.id}"
 }
 
-resource "aws_security_group_rule" "admin-ec2-sg-allowhttpfromelb" {
+resource "aws_security_group_rule" "admin-ec2-sg-allowhttpfromadmin-elb" {
     type                     = "ingress"
     from_port                = 80
     to_port                  = 80
