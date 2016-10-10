@@ -43,9 +43,9 @@ resource "aws_autoscaling_group" "gluster-shared-ec2-as" {
     name                    = "gluster-shared-ec2-as"
     launch_configuration    = "${aws_launch_configuration.gluster-shared-ec2-lc.id}"
     availability_zones      = ["${split(",", lookup(var.aws_availibility_zones, var.aws_region))}"]
-    max_size                = 5
-    desired_capacity        = 3
-    min_size                = 3
+    max_size                = 0
+    desired_capacity        = 0
+    min_size                = 0
     vpc_zone_identifier     = ["${aws_subnet.apps-shared-1a.id}", "${aws_subnet.apps-shared-1c.id}", "${aws_subnet.apps-shared-1d.id}"]
     tag {
       key                   = "app"
