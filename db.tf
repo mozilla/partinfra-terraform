@@ -1,4 +1,5 @@
 variable "mysql-shared-db_password" {}
+variable "postgres-shared-db_password" {}
 
 resource "aws_db_subnet_group" "apps-shared-rds-subnetgroup" {
     name = "apps-shared-rds-subnetgroup"
@@ -67,4 +68,40 @@ resource "aws_route53_record" "mysql-shared-dns" {
   type = "CNAME"
   ttl = 300
   records = ["${aws_db_instance.mysql-shared-db.address}"]
+}
+
+resource "aws_db_instance" "postgres-shared-db" {
+    identifier                = "postgres-shared-db"
+    allocated_storage         = 50
+    engine                    = "postgres"
+    engine_version            = "9.5.4"
+    instance_class            = "db.m4.xlarge"
+    publicly_accessible       = false
+    backup_retention_period   = 7
+    apply_immediately         = true
+    multi_az                  = true
+    storage_type              = "gp2"
+    final_snapshot_identifier = "postgres-shared-db-final"
+    name                      = "postgresshareddb"
+    username                  = "root"
+    password                  = "${var.postgres-shared-db_password}"
+    vpc_security_group_ids    = ["${aws_security_group.shared-rds-sg.id}"]
+    db_subnet_group_name      = "${aws_db_subnet_group.apps-shared-rds-subnetgroup.name}"
+    parameter_group_name      = "default.postgres9.5"
+    copy_tags_to_snapshot     = true
+
+    tags {
+        Name = "postgres-shared-db"
+        app = "postgres"
+        env = "shared"
+        project = "partinfra"
+    }
+}
+
+resource "aws_route53_record" "postgres-shared-dns" {
+  zone_id =  "${var.paas-mozilla-community-zone-id}"
+  name    = "postgres-shared-db"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["${aws_db_instance.postgres-shared-db.address}"]
 }
