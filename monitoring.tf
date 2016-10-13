@@ -1,9 +1,3 @@
-resource "aws_elasticache_subnet_group" "elasticache-shared-subnet-group" {
-  name                 = "elasticache-shared-subnet-group"
-  subnet_ids           = ["${aws_subnet.apps-shared-1a.id}", "${aws_subnet.apps-shared-1c.id}", "${aws_subnet.apps-shared-1d.id}"]
-  description          = "Subnet group for shared VPC"
-}
-
 resource "aws_security_group" "sensu-redis-sg" {
   name                 = "sensu-redis-shared-sg"
   description          = "Sensu elasticache SG"
