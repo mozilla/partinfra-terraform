@@ -25,8 +25,8 @@ resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowhttpfromjenkins-p
 
 resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowmesosframework" {
     type                     = "ingress"
-    from_port                = 58230
-    to_port                  = 58230
+    from_port                = 10000
+    to_port                  = 65535
     protocol                 = "tcp"
     source_security_group_id = "${module.mesos-cluster-staging.mesos-cluster-master-sg-id}"
 
