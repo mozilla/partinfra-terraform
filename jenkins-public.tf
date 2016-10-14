@@ -23,6 +23,16 @@ resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowhttpfromjenkins-p
     security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
 }
 
+resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowmesosframework" {
+    type                     = "ingress"
+    from_port                = 58230
+    to_port                  = 58230
+    protocol                 = "tcp"
+    source_security_group_id = "${module.mesos-cluster-staging.mesos-cluster-master-sg-id}"
+
+    security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
+}
+
 resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowhttpfromall" {
     type                     = "ingress"
     from_port                = 8080
@@ -105,7 +115,7 @@ resource "aws_elb" "jenkins-public-elb" {
     instance_protocol         = "http"
     lb_port                   = 443
     lb_protocol               = "https"
-    ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/27b77e07-6d6f-4ea6-8d5c-8e216d33c5d7"
+    ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
   }
 
   health_check {
