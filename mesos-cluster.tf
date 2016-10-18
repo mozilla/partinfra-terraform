@@ -14,6 +14,7 @@ module "mesos-cluster-staging" {
     subnet2              = "${aws_subnet.apps-staging-1c.id}"
     subnet3              = "${aws_subnet.apps-staging-1d.id}"
 }
+
 module "mesos-cluster-production" {
     source               = "./modules/mesos-cluster"
     # provider vars
