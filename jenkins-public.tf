@@ -23,6 +23,34 @@ resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowhttpfromjenkins-p
     security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
 }
 
+resource "aws_security_group_rule" "jenkins-public-elb-sg-allowregistryfromelb" {
+    type                     = "ingress"
+    from_port                = 5000
+    to_port                  = 5000
+    protocol                 = "tcp"
+    source_security_group_id = "${aws_security_group.jenkins-public-elb-sg.id}"
+
+    security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
+}
+
+resource "aws_security_group_rule" "jenkins-public-elb-sg-allowregistryfromstaging" {
+    type                     = "ingress"
+    from_port                = 5000
+    to_port                  = 5000
+    protocol                 = "tcp"
+    source_security_group_id = "${module.mesos-cluster-staging.mesos-cluster-slave-sg-id}"
+    security_group_id        = "${aws_security_group.jenkins-public-elb-sg.id}"
+}
+
+resource "aws_security_group_rule" "jenkins-public-elb-sg-allowregistryfromproduction" {
+    type                     = "ingress"
+    from_port                = 5000
+    to_port                  = 5000
+    protocol                 = "tcp"
+    source_security_group_id = "${module.mesos-cluster-production.mesos-cluster-slave-sg-id}"
+    security_group_id        = "${aws_security_group.jenkins-public-elb-sg.id}"
+}
+
 resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowmesosframework" {
     type                     = "ingress"
     from_port                = 10000
@@ -124,6 +152,14 @@ resource "aws_elb" "jenkins-public-elb" {
     instance_port             = 8080
     instance_protocol         = "http"
     lb_port                   = 443
+    lb_protocol               = "https"
+    ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
+  }
+
+  listener {
+    instance_port             = 5000
+    instance_protocol         = "http"
+    lb_port                   = 5000
     lb_protocol               = "https"
     ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
   }
