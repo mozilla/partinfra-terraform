@@ -371,3 +371,23 @@ resource "aws_route_table_association" "apps-shared-1d-rtbassoc" {
     route_table_id = "${aws_route_table.apps-shared-rt.id}"
     subnet_id      = "${aws_subnet.apps-shared-1d.id}"
 }
+
+# Elasticache subnet groups
+
+resource "aws_elasticache_subnet_group" "elasticache-shared-subnet-group" {
+  name                 = "elasticache-shared-subnet-group"
+  subnet_ids           = ["${aws_subnet.apps-shared-1a.id}", "${aws_subnet.apps-shared-1c.id}", "${aws_subnet.apps-shared-1d.id}"]
+  description          = "Subnet group for shared VPC"
+}
+
+resource "aws_elasticache_subnet_group" "elasticache-staging-subnet-group" {
+  name                 = "elasticache-staging-subnet-group"
+  subnet_ids           = ["${aws_subnet.apps-staging-1a.id}", "${aws_subnet.apps-staging-1c.id}", "${aws_subnet.apps-staging-1d.id}"]
+  description          = "Subnet group for staging VPC"
+}
+
+resource "aws_elasticache_subnet_group" "elasticache-production-subnet-group" {
+  name                 = "elasticache-production-subnet-group"
+  subnet_ids           = ["${aws_subnet.apps-production-1a.id}", "${aws_subnet.apps-production-1c.id}", "${aws_subnet.apps-production-1d.id}"]
+  description          = "Subnet group for production VPC"
+}
