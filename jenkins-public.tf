@@ -33,6 +33,16 @@ resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowmesosframework" {
     security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
 }
 
+resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowjnlpfromslave" {
+    type                     = "ingress"
+    from_port                = 50000
+    to_port                  = 50000
+    protocol                 = "tcp"
+    source_security_group_id = "${module.mesos-cluster-staging.mesos-cluster-slave-sg-id}"
+
+    security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
+}
+
 resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowhttpfromall" {
     type                     = "ingress"
     from_port                = 8080
