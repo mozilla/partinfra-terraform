@@ -23,6 +23,34 @@ resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowhttpfromjenkins-p
     security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
 }
 
+resource "aws_security_group_rule" "jenkins-public-elb-sg-allowregistryfromelb" {
+    type                     = "ingress"
+    from_port                = 5000
+    to_port                  = 5000
+    protocol                 = "tcp"
+    source_security_group_id = "${aws_security_group.jenkins-public-elb-sg.id}"
+
+    security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
+}
+
+resource "aws_security_group_rule" "jenkins-public-elb-sg-allowregistryfromstaging" {
+    type                     = "ingress"
+    from_port                = 5000
+    to_port                  = 5000
+    protocol                 = "tcp"
+    source_security_group_id = "${module.mesos-cluster-staging.mesos-cluster-slave-sg-id}"
+    security_group_id        = "${aws_security_group.jenkins-public-elb-sg.id}"
+}
+
+resource "aws_security_group_rule" "jenkins-public-elb-sg-allowregistryfromproduction" {
+    type                     = "ingress"
+    from_port                = 5000
+    to_port                  = 5000
+    protocol                 = "tcp"
+    source_security_group_id = "${module.mesos-cluster-production.mesos-cluster-slave-sg-id}"
+    security_group_id        = "${aws_security_group.jenkins-public-elb-sg.id}"
+}
+
 resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowmesosframework" {
     type                     = "ingress"
     from_port                = 10000
@@ -49,9 +77,9 @@ resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowhttpfromall" {
     to_port                  = 8080
     protocol                 = "tcp"
     cidr_blocks              = [
-      "${aws_vpc.apps-shared-vpc.cidr_block}",
-      "${aws_vpc.apps-staging-vpc.cidr_block}",
-      "${aws_vpc.apps-production-vpc.cidr_block}"
+        "${aws_vpc.apps-shared-vpc.cidr_block}",
+        "${aws_vpc.apps-staging-vpc.cidr_block}",
+        "${aws_vpc.apps-production-vpc.cidr_block}"
     ]
 
     security_group_id        = "${aws_security_group.jenkins-public-ec2-sg.id}"
@@ -75,8 +103,8 @@ resource "aws_instance" "jenkins-public-ec2" {
     subnet_id               = "${aws_subnet.apps-shared-1c.id}"
 
     root_block_device {
-      volume_type = "standard"
-      volume_size = 20
+        volume_type = "standard"
+        volume_size = 20
     }
 
     tags {
@@ -115,37 +143,45 @@ resource "aws_security_group_rule" "jenkins-public-elb-sg-allowall" {
 }
 
 resource "aws_elb" "jenkins-public-elb" {
-  name                        = "jenkins-public-elb"
-  security_groups             = ["${aws_security_group.jenkins-public-elb-sg.id}"]
-  subnets                     = ["${aws_subnet.apps-shared-1c.id}"]
-  internal                    = false
+    name                        = "jenkins-public-elb"
+    security_groups             = ["${aws_security_group.jenkins-public-elb-sg.id}"]
+    subnets                     = ["${aws_subnet.apps-shared-1c.id}"]
+    internal                    = false
 
-  listener {
-    instance_port             = 8080
-    instance_protocol         = "http"
-    lb_port                   = 443
-    lb_protocol               = "https"
-    ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
-  }
+    listener {
+        instance_port             = 8080
+        instance_protocol         = "http"
+        lb_port                   = 443
+        lb_protocol               = "https"
+        ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
+    }
 
-  health_check {
-    healthy_threshold         = 2
-    unhealthy_threshold       = 2
-    timeout                   = 3
-    target                    = "TCP:8080"
-    interval                  = 30
-  }
+    listener {
+        instance_port             = 5000
+        instance_protocol         = "http"
+        lb_port                   = 5000
+        lb_protocol               = "https"
+        ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
+    }
 
-  instances = ["${aws_instance.jenkins-public-ec2.id}"]
-  cross_zone_load_balancing   = true
-  idle_timeout                = 400
-  connection_draining         = true
-  connection_draining_timeout = 400
+    health_check {
+        healthy_threshold         = 2
+        unhealthy_threshold       = 2
+        timeout                   = 3
+        target                    = "TCP:8080"
+        interval                  = 30
+    }
 
-  tags {
-    Name                      = "jenkins-public-elb"
-    app                       = "jenkins"
-    env                       = "shared"
-    project                   = "partinfra"
-  }
+    instances = ["${aws_instance.jenkins-public-ec2.id}"]
+    cross_zone_load_balancing   = true
+    idle_timeout                = 400
+    connection_draining         = true
+    connection_draining_timeout = 400
+
+    tags {
+        Name                      = "jenkins-public-elb"
+        app                       = "jenkins"
+        env                       = "shared"
+        project                   = "partinfra"
+    }
 }

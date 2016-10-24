@@ -19,12 +19,12 @@ resource "aws_security_group_rule" "admin-ec2-sg-allowsharedssh" {
 }
 
 resource "aws_security_group_rule" "admin-ec2-sg-allowsharedjenkins" {
-  type                     = "ingress"
-  from_port                = 8081
-  to_port                  = 8081
-  protocol                 = "tcp"
-  cidr_blocks              = ["${aws_vpc.apps-shared-vpc.cidr_block}"]
-  security_group_id        = "${aws_security_group.admin-ec2-sg.id}"
+    type                     = "ingress"
+    from_port                = 8081
+    to_port                  = 8081
+    protocol                 = "tcp"
+    cidr_blocks              = ["${aws_vpc.apps-shared-vpc.cidr_block}"]
+    security_group_id        = "${aws_security_group.admin-ec2-sg.id}"
 }
 
 resource "aws_security_group_rule" "admin-ec2-sg-allowhttpfromadmin-elb" {
@@ -56,8 +56,8 @@ resource "aws_instance" "admin-ec2" {
     iam_instance_profile    = "${aws_iam_instance_profile.admin-ec2-profile.name}"
 
     root_block_device {
-      volume_type = "standard"
-      volume_size = 20
+        volume_type = "standard"
+        volume_size = 20
     }
 
     tags {
@@ -95,45 +95,45 @@ resource "aws_security_group_rule" "admin-elb-sg-allowall" {
     to_port           = 0
     protocol          = "-1"
     cidr_blocks       = [
-      "${aws_vpc.apps-shared-vpc.cidr_block}",
-      "${aws_vpc.apps-staging-vpc.cidr_block}",
-      "${aws_vpc.apps-production-vpc.cidr_block}"
+        "${aws_vpc.apps-shared-vpc.cidr_block}",
+        "${aws_vpc.apps-staging-vpc.cidr_block}",
+        "${aws_vpc.apps-production-vpc.cidr_block}"
     ]
 
     security_group_id = "${aws_security_group.admin-elb-sg.id}"
 }
 
 resource "aws_elb" "admin-elb" {
-  name                        = "admin-elb"
-  security_groups             = ["${aws_security_group.admin-elb-sg.id}"]
-  subnets                     = ["${aws_subnet.apps-shared-1c.id}"]
-  internal                    = true
+    name                        = "admin-elb"
+    security_groups             = ["${aws_security_group.admin-elb-sg.id}"]
+    subnets                     = ["${aws_subnet.apps-shared-1c.id}"]
+    internal                    = true
 
-  listener {
-    instance_port             = 80
-    instance_protocol         = "http"
-    lb_port                   = 443
-    lb_protocol               = "https"
-    ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/27b77e07-6d6f-4ea6-8d5c-8e216d33c5d7"
-  }
+    listener {
+        instance_port             = 80
+        instance_protocol         = "http"
+        lb_port                   = 443
+        lb_protocol               = "https"
+        ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/27b77e07-6d6f-4ea6-8d5c-8e216d33c5d7"
+    }
 
-  health_check {
-    healthy_threshold         = 2
-    unhealthy_threshold       = 2
-    timeout                   = 3
-    target                    = "TCP:80"
-    interval                  = 30
-  }
+    health_check {
+        healthy_threshold         = 2
+        unhealthy_threshold       = 2
+        timeout                   = 3
+        target                    = "TCP:80"
+        interval                  = 30
+    }
 
-  instances = ["${aws_instance.admin-ec2.id}"]
-  cross_zone_load_balancing   = true
-  idle_timeout                = 400
-  connection_draining         = true
-  connection_draining_timeout = 400
+    instances = ["${aws_instance.admin-ec2.id}"]
+    cross_zone_load_balancing   = true
+    idle_timeout                = 400
+    connection_draining         = true
+    connection_draining_timeout = 400
 
-  tags {
-    Name                      = "admin-elb"
-    app                       = "jenkins"
-    env                       = "shared"
-  }
+    tags {
+        Name                      = "admin-elb"
+        app                       = "jenkins"
+        env                       = "shared"
+    }
 }
