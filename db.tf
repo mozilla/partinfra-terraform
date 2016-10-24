@@ -36,38 +36,57 @@ resource "aws_security_group_rule" "shared-rds-sg-allowmysqlfromstaging" {
     security_group_id = "${aws_security_group.shared-rds-sg.id}"
 }
 
+resource "aws_security_group_rule" "shared-rds-sg-allowpostgresfromprod" {
+    type              = "ingress"
+    from_port         = 5432
+    to_port           = 5432
+    protocol          = "tcp"
+    source_security_group_id = "${module.mesos-cluster-production.mesos-cluster-slave-sg-id}"
+
+    security_group_id = "${aws_security_group.shared-rds-sg.id}"
+}
+
+resource "aws_security_group_rule" "shared-rds-sg-allowpostgresfromstaging" {
+    type              = "ingress"
+    from_port         = 5432
+    to_port           = 5432
+    protocol          = "tcp"
+    source_security_group_id = "${module.mesos-cluster-staging.mesos-cluster-slave-sg-id}"
+
+    security_group_id = "${aws_security_group.shared-rds-sg.id}"
+}
 
 resource "aws_db_instance" "mysql-shared-db" {
-  allocated_storage    = 40
-  engine               = "mysql"
-  engine_version       = "5.6.27"
-  instance_class       = "db.t2.medium"
-  publicly_accessible  = false
-  backup_retention_period = 7
-  apply_immediately    = true
-  multi_az             = true
-  storage_type         = "gp2"
-  final_snapshot_identifier = "mysql-shared-db-final"
-  name                 = "mysqlshareddb"
-  username             = "root"
-  password             = "${var.mysql-shared-db_password}"
-  vpc_security_group_ids = ["${aws_security_group.shared-rds-sg.id}"]
-  db_subnet_group_name = "${aws_db_subnet_group.apps-shared-rds-subnetgroup.name}"
-  parameter_group_name = "default.mysql5.6"
-  tags {
-      Name                = "mysql-shared-db"
-      app                 = "mysql"
-      env                 = "shared"
-      project             = "partinfra"
-  }
+    allocated_storage    = 40
+    engine               = "mysql"
+    engine_version       = "5.6.27"
+    instance_class       = "db.t2.medium"
+    publicly_accessible  = false
+    backup_retention_period = 7
+    apply_immediately    = true
+    multi_az             = true
+    storage_type         = "gp2"
+    final_snapshot_identifier = "mysql-shared-db-final"
+    name                 = "mysqlshareddb"
+    username             = "root"
+    password             = "${var.mysql-shared-db_password}"
+    vpc_security_group_ids = ["${aws_security_group.shared-rds-sg.id}"]
+    db_subnet_group_name = "${aws_db_subnet_group.apps-shared-rds-subnetgroup.name}"
+    parameter_group_name = "default.mysql5.6"
+    tags {
+        Name                = "mysql-shared-db"
+        app                 = "mysql"
+        env                 = "shared"
+        project             = "partinfra"
+    }
 }
 
 resource "aws_route53_record" "mysql-shared-dns" {
-  zone_id =  "${var.paas-mozilla-community-zone-id}"
-  name = "mysql-shared-db"
-  type = "CNAME"
-  ttl = 300
-  records = ["${aws_db_instance.mysql-shared-db.address}"]
+    zone_id =  "${var.paas-mozilla-community-zone-id}"
+    name = "mysql-shared-db"
+    type = "CNAME"
+    ttl = 300
+    records = ["${aws_db_instance.mysql-shared-db.address}"]
 }
 
 resource "aws_db_instance" "postgres-shared-db" {
@@ -99,9 +118,9 @@ resource "aws_db_instance" "postgres-shared-db" {
 }
 
 resource "aws_route53_record" "postgres-shared-dns" {
-  zone_id =  "${var.paas-mozilla-community-zone-id}"
-  name    = "postgres-shared-db"
-  type    = "CNAME"
-  ttl     = 300
-  records = ["${aws_db_instance.postgres-shared-db.address}"]
+    zone_id =  "${var.paas-mozilla-community-zone-id}"
+    name    = "postgres-shared-db"
+    type    = "CNAME"
+    ttl     = 300
+    records = ["${aws_db_instance.postgres-shared-db.address}"]
 }
