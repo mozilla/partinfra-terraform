@@ -45,3 +45,15 @@ resource "aws_elasticache_cluster" "discourse-redis-ec" {
         project                = "discourse"
     }
 }
+
+resource "aws_s3_bucket" "discourse-content" {
+    bucket = "discourse-paas-${var.environment}-content"
+    acl = "private"
+
+    tags {
+        Name = "discourse-paas-${var.environment}-content"
+        app = "discourse"
+        env = "${var.environment}"
+        project = "discourse"
+    }
+}
