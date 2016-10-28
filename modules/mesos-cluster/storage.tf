@@ -36,7 +36,3 @@ resource "aws_efs_mount_target" "marathon-efs-shared-1d" {
   subnet_id = "${var.subnet3}"
   security_groups = ["${aws_security_group.marathon-efs-sg.id}"]
 }
-
-output "marathon-efs-id" {
-    value = "${aws_efs_file_system.marathon-efs.id}"
-}
