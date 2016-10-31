@@ -13,6 +13,7 @@ module "mesos-cluster-staging" {
     subnet1              = "${aws_subnet.apps-staging-1a.id}"
     subnet2              = "${aws_subnet.apps-staging-1c.id}"
     subnet3              = "${aws_subnet.apps-staging-1d.id}"
+    sns_topic_arn        = "${aws_sns_topic.sns-cloudwatch-partinfra.arn}"
 }
 
 module "mesos-cluster-production" {
@@ -29,4 +30,5 @@ module "mesos-cluster-production" {
     subnet1              = "${aws_subnet.apps-production-1a.id}"
     subnet2              = "${aws_subnet.apps-production-1c.id}"
     subnet3              = "${aws_subnet.apps-production-1d.id}"
+    sns_topic_arn        = "${aws_sns_topic.sns-cloudwatch-partinfra.arn}"
 }

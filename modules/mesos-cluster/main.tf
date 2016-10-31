@@ -7,6 +7,7 @@ variable "slave_instance_type" {}
 variable "subnet1" {}
 variable "subnet2" {}
 variable "subnet3" {}
+variable "sns_topic_arn" {}
 
 resource "aws_elb" "mesos-elb" {
   name                        = "mesos-${var.environment}-elb"
@@ -228,4 +229,23 @@ resource "aws_route53_record" "paas-mozilla-org-dns-zone" {
   type = "CNAME"
   ttl = 300
   records = ["${aws_elb.mozilla-org-elb.dns_name}"]
+}
+
+resource "aws_cloudwatch_metric_alarm" "cloudwatch-health-host-count-elb-alarm" {
+  alarm_name = "cloudwatch-health-count-${var.environment}"
+  comparison_operator = "LessThanThreshold"
+  metric_name = "HealthyHostCount"
+  threshold = "3"
+  statistic = "Average"
+  period = "120"
+  alarm_description = "Monitor number of healthy instances."
+  ok_actions = []
+  insufficient_data_actions = []
+  namespace = "AWS/ELB"
+  dimensions = {
+    "LoadBalancerName"="mesos-${var.environment}-elb"
+  }
+  actions_enabled = true
+  alarm_actions = ["${var.sns_topic_arn}"]
+  evaluation_periods = "2"
 }
