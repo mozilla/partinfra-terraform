@@ -193,7 +193,7 @@ resource "aws_security_group_rule" "bitergia-ec2-sg-allowall" {
 resource "aws_instance" "bitergia-ec2" {
     provider                 = "aws.us-west-1"
     ami                      = "${lookup(var.aws_amis, "debian-jessie-8-4")}"
-    instance_type            = "r3.large"
+    instance_type            = "r3.2xlarge"
     disable_api_termination  = false
     key_name                 = "bitergia"
     vpc_security_group_ids   = ["${aws_security_group.bitergia-ec2-sg.id}"]
