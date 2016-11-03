@@ -50,6 +50,15 @@ resource "aws_s3_bucket" "discourse-content" {
     bucket = "discourse-paas-${var.environment}-content"
     acl = "private"
 
+    lifecycle_rule {
+        id = "purge-tombstone"
+        prefix = "tombstone/"
+        enabled = true
+        expiration {
+            days = 30
+        }
+    }
+
     tags {
         Name = "discourse-paas-${var.environment}-content"
         app = "discourse"
