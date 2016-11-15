@@ -8,6 +8,9 @@ variable "subnet1" {}
 variable "subnet2" {}
 variable "subnet3" {}
 variable "sns_topic_arn" {}
+variable "slave_as_max_size" {}
+variable "slave_as_desired_capacity" {}
+variable "slave_as_min_size" {}
 
 resource "aws_elb" "mesos-elb" {
   name                        = "mesos-${var.environment}-elb"
@@ -120,9 +123,9 @@ resource "aws_autoscaling_group" "mesos-slave-as" {
     name                    = "mesos-slave-${var.environment}-as"
     launch_configuration    = "${aws_launch_configuration.mesos-slave-ec2-lc.id}"
     availability_zones      = ["${split(",", lookup(var.aws_availibility_zones, var.aws_region))}"]
-    max_size                = 5
-    desired_capacity        = 3
-    min_size                = 3
+    max_size                = "${var.slave_as_max_size}"
+    desired_capacity        = "${var.slave_as_desired_capacity}"
+    min_size                = "${var.slave_as_min_size}"
     vpc_zone_identifier     = ["${var.subnet1}", "${var.subnet2}", "${var.subnet3}"]
     tag {
       key                   = "app"
