@@ -32,3 +32,13 @@ variable "aws_account_id" {
 variable "paas-mozilla-community-zone-id" {
   default = "Z1BZGUW286G7FF"
 }
+
+variable "ssl_certificates" {
+  type = "map"
+  default = {
+    community-sites-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/0839bbcf-3570-4f74-bc99-24eb328c291d"
+    mozilla-org-elb-us-east-1 = "arn:aws:iam::484535289196:server-certificate/toolkit-mozilla-org-2016-08-02"
+    mesos-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
+    analytics-us-west-1 = "arn:aws:acm:us-west-1:484535289196:certificate/e24546b9-d962-4d91-b807-aec1d2fd9372"
+  }
+}
