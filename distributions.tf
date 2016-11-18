@@ -6,7 +6,7 @@ module "activate-mozilla-community" {
   origin_id           = "gh-pages-activate-mozilla-community"
   alias               = "activate.mozilla.community"
   comment             = "Bug 1287738"
-  acm_certificate_arn = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
 }
 
 module "campus-mozilla-community" {
@@ -17,5 +17,5 @@ module "campus-mozilla-community" {
   origin_id           = "gh-pages-campus-mozilla-community"
   alias               = "campus.mozilla.community"
   comment             = "Bug 1301082"
-  acm_certificate_arn = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
 }
