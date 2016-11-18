@@ -270,7 +270,7 @@ resource "aws_elb" "bitergia-elb" {
     instance_protocol         = "https"
     lb_port                   = 443
     lb_protocol               = "https"
-    ssl_certificate_id        = "arn:aws:acm:us-west-1:${var.aws_account_id}:certificate/e24546b9-d962-4d91-b807-aec1d2fd9372"
+    ssl_certificate_id        = "${lookup(var.ssl_certificates, "analytics-us-west-1")}"
   }
 
   health_check {
