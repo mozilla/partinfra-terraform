@@ -3,6 +3,8 @@ variable "discourse_elasticache_instance_size" {}
 variable "elasticache_subnet_group" {}
 variable "service_security_group_id" {}
 variable "environment" {}
+variable "fqdn" {}
+variable "ssl_certificate" {}
 
 resource "aws_security_group" "discourse-redis-sg" {
     name                     = "discourse-redis-shared-sg"
@@ -65,4 +67,15 @@ resource "aws_s3_bucket" "discourse-content" {
         env = "${var.environment}"
         project = "discourse"
     }
+}
+
+module "discourse-cdn" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+
+  origin_domain_name  = "${var.fqdn}"
+  origin_path         = "/"
+  origin_id           = "discourse-pull-origin"
+  alias               = "cdn-${var.environment}.discourse.mozilla-community.org"
+  comment             = "Discourse ${var.environment} CDN"
+  acm_certificate_arn = "${var.ssl_certificate}"
 }
