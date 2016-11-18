@@ -39,6 +39,6 @@ variable "ssl_certificates" {
     community-sites-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/8b9d3a10-4ab1-4dad-9889-66749b899711"
     mozilla-org-elb-us-east-1 = "arn:aws:iam::484535289196:server-certificate/toolkit-mozilla-org-2016-08-02"
     mesos-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
-    analytics-us-west-1 = "arn:aws:acm:us-west-1:484535289196:certificate/e24546b9-d962-4d91-b807-aec1d2fd9372"
+    analytics-us-west-1 = "arn:aws:acm:us-west-1:484535289196:certificate/b09c28f0-a98e-409c-b614-be356e9c593c"
   }
 }
