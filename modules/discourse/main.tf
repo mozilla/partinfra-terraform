@@ -75,6 +75,7 @@ module "discourse-cdn" {
   origin_domain_name  = "${var.fqdn}"
   origin_path         = ""
   origin_id           = "discourse-pull-origin"
+  compression         = true
   alias               = "cdn-${var.environment}.discourse.mozilla-community.org"
   comment             = "Discourse ${var.environment} CDN"
   acm_certificate_arn = "${var.ssl_certificate}"

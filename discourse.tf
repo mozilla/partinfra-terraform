@@ -7,7 +7,7 @@ module "discourse-production" {
     service_security_group_id           = "${module.mesos-cluster-production.mesos-cluster-slave-sg-id}"
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
     fqdn                                = "discourse.mozilla-community.org"
-    ssl_certificate                    = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
+    ssl_certificate                     = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
 }
 
 module "discourse-staging" {
@@ -19,5 +19,5 @@ module "discourse-staging" {
     service_security_group_id           = "${module.mesos-cluster-staging.mesos-cluster-slave-sg-id}"
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-staging-subnet-group.name}"
     fqdn                                = "discourse.staging.paas.mozilla.community"
-    ssl_certificate                    = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
+    ssl_certificate                     = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
 }
