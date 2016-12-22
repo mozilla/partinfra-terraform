@@ -31,8 +31,6 @@ Get Involved!
   * Deploy shared [AWS VPC](https://aws.amazon.com/vpc/), security group rules and [autoscaling group](https://aws.amazon.com/autoscaling/) for our [consul](https://www.consul.io/) cluster
 * ``db``
   * Deploy shared [AWS RDS](https://aws.amazon.com/rds/) (MySQL) instance, security group rules and [AWS Route53](https://aws.amazon.com/route53/) DNS entry for our generic MySQL instance.
-* ``gluster``
-  * Deploy [AWS EC2](https://aws.amazon.com/ec2/) instances, security group rules and [autoscaling group](https://aws.amazon.com/autoscaling/) for our [gluster](https://www.gluster.org/) cluster.
 * ``network``
   * Deploy staging, production and shared [AWS VPC](https://aws.amazon.com/vpc/) and configure the network flow required for the cluster needs.
 * ``terraform``
