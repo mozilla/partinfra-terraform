@@ -1,4 +1,27 @@
 variable "bitergia-db_password" {}
+variable "rust-metrics-es-iam-policy" {
+    type    = "string"
+    default = <<CONFIG
+{
+"Version": "2012-10-17",
+"Statement": [
+    {
+        "Action": "es:*",
+        "Principal": "*",
+        "Effect": "Allow",
+        "Condition": {
+          "IpAddress": {
+            "aws:SourceIp": [
+              "54.67.69.59",
+              "10.0.27.67"
+            ]
+          }
+        }
+    }
+]
+}
+CONFIG
+}
 
 # VPC
 resource "aws_vpc" "bitergia-metrics-vpc" {
@@ -292,4 +315,36 @@ resource "aws_elb" "bitergia-elb" {
     env                       = "production"
     project                   = "metrics"
   }
+}
+
+resource "aws_elasticsearch_domain" "bitergia-rust-metrics-es" {
+    provider                          = "aws.us-west-1"
+    domain_name                       = "bitergia-rust-metrics-es"
+    elasticsearch_version             = "2.3"
+
+    access_policies                   = "${var.rust-metrics-es-iam-policy}"
+
+    ebs_options {
+        ebs_enabled                   = true
+        volume_type                   = "standard"
+        volume_size                   = 50
+    }
+
+    cluster_config {
+        instance_count                = 2
+        instance_type                 = "m4.large.elasticsearch"
+        dedicated_master_enabled      = false
+        zone_awareness_enabled        = false
+    }
+
+    snapshot_options {
+        automated_snapshot_start_hour = 23
+    }
+
+    tags {
+      Domain                          = "bitergia-rust-metrics-es"
+      app                             = "elasticsearch"
+      env                             = "production"
+      project                         = "metrics"
+    }
 }
