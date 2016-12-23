@@ -332,7 +332,7 @@ resource "aws_elasticsearch_domain" "bitergia-rust-metrics-es" {
 
     cluster_config {
         instance_count                = 2
-        instance_type                 = "m4.large.elasticsearch"
+        instance_type                 = "m3.large.elasticsearch"
         dedicated_master_enabled      = false
         zone_awareness_enabled        = false
     }
