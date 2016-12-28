@@ -19,3 +19,13 @@ module "campus-mozilla-community" {
   comment             = "Bug 1301082"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
 }
+
+module "badges-mozilla-org" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+
+  origin_domain_name  = "badges.mozilla.org.s3-website-us-east-1.amazonaws.com"
+  origin_id           = "s3-badges-mozilla-org"
+  alias               = "badges.mozilla.org"
+  comment             = "Bug 1230266"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mozilla-org-elb-${var.aws_region}")}"
+}
