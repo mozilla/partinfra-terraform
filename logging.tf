@@ -9,7 +9,7 @@ variable "infra_logs_es_iam_policy" {
             "Principal": "*",
             "Effect": "Allow",
             "Condition": {
-                "IpAddress": {"aws:SourceIp": ["10.2.0.0/16"]}
+                "IpAddress": {"aws:SourceIp": ["52.91.164.226"]}
             }
         }
     ]
