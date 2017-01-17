@@ -38,7 +38,33 @@ resource "aws_efs_mount_target" "jenkins-efs-shared-1d" {
   security_groups = ["${aws_security_group.admin-efs-sg.id}"]
 }
 
-# Jenkins public EFS
+# Grafana EFS
+resource "aws_efs_file_system" "grafana-efs" {
+    tags {
+        Name = "grafana-efs"
+    }
+}
+
+resource "aws_efs_mount_target" "grafana-efs-1a" {
+    file_system_id = "${aws_efs_file_system.grafana-efs.id}"
+    subnet_id = "${aws_subnet.apps-shared-1a.id}"
+    security_groups = ["${aws_security_group.admin-efs-sg.id}"]
+}
+
+resource "aws_efs_mount_target" "grafana-efs-1c" {
+    file_system_id = "${aws_efs_file_system.grafana-efs.id}"
+    subnet_id = "${aws_subnet.apps-shared-1c.id}"
+    security_groups = ["${aws_security_group.admin-efs-sg.id}"]
+}
+
+resource "aws_efs_mount_target" "grafana-efs-1d" {
+    file_system_id = "${aws_efs_file_system.grafana-efs.id}"
+    subnet_id = "${aws_subnet.apps-shared-1d.id}"
+    security_groups = ["${aws_security_group.admin-efs-sg.id}"]
+}
+
+
+# Public Jenkins EFS
 resource "aws_security_group" "jenkins-public-efs-sg" {
    name        = "jenkins-public-efs-sg"
    description = "jenkins-public EFS SG"
