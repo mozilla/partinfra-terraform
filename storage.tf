@@ -1,16 +1,17 @@
-resource "aws_security_group" "jenkins-efs-sg" {
-   name        = "jenkins-efs-sg"
-   description = "Jenkins EFS SG"
+# Admin EFS
+resource "aws_security_group" "admin-efs-sg" {
+   name        = "admin-efs-sg"
+   description = "Admin EFS SG"
    vpc_id      = "${aws_vpc.apps-shared-vpc.id}"
 }
 
-resource "aws_security_group_rule" "jenkins-efs-sg-allownfsfromadmin" {
+resource "aws_security_group_rule" "admin-efs-sg-allownfsfromadmin" {
     type              = "ingress"
     from_port         = 2049
     to_port           = 2049
     protocol          = "tcp"
     source_security_group_id = "${aws_security_group.admin-ec2-sg.id}"
-    security_group_id = "${aws_security_group.jenkins-efs-sg.id}"
+    security_group_id = "${aws_security_group.admin-efs-sg.id}"
 }
 
 resource "aws_efs_file_system" "jenkins-efs" {
@@ -22,19 +23,19 @@ resource "aws_efs_file_system" "jenkins-efs" {
 resource "aws_efs_mount_target" "jenkins-efs-shared-1a" {
   file_system_id = "${aws_efs_file_system.jenkins-efs.id}"
   subnet_id = "${aws_subnet.apps-shared-1a.id}"
-  security_groups = ["${aws_security_group.jenkins-efs-sg.id}"]
+  security_groups = ["${aws_security_group.admin-efs-sg.id}"]
 }
 
 resource "aws_efs_mount_target" "jenkins-efs-shared-1c" {
   file_system_id = "${aws_efs_file_system.jenkins-efs.id}"
   subnet_id = "${aws_subnet.apps-shared-1c.id}"
-  security_groups = ["${aws_security_group.jenkins-efs-sg.id}"]
+  security_groups = ["${aws_security_group.admin-efs-sg.id}"]
 }
 
 resource "aws_efs_mount_target" "jenkins-efs-shared-1d" {
   file_system_id = "${aws_efs_file_system.jenkins-efs.id}"
   subnet_id = "${aws_subnet.apps-shared-1d.id}"
-  security_groups = ["${aws_security_group.jenkins-efs-sg.id}"]
+  security_groups = ["${aws_security_group.admin-efs-sg.id}"]
 }
 
 # Jenkins public EFS
