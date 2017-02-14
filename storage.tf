@@ -112,3 +112,15 @@ resource "aws_efs_mount_target" "jenkins-public-efs-shared-1d" {
   subnet_id = "${aws_subnet.apps-shared-1d.id}"
   security_groups = ["${aws_security_group.jenkins-public-efs-sg.id}"]
 }
+
+resource "aws_s3_bucket" "lambda-functions" {
+    bucket = "partinfra-lambda-functions"
+    acl = "private"
+
+    tags {
+        Name = "partinfra-lambda-functions"
+        app = "lambda"
+        env = "shared"
+        project = "partinfra"
+    }
+}
