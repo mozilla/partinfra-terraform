@@ -45,3 +45,14 @@ resource "aws_elasticsearch_domain" "infra-logs-es" {
         env = "shared"
     }
 }
+
+# CloudFormation stack for infosec CloudTrail storage
+resource "aws_cloudformation_stack" "infosec-cloudtrail" {
+    name         = "infosec-cloudtrail"
+    template_url = "https://s3.amazonaws.com/infosec-cloudformation-templates/configure_cloudtrail_to_use_mozilla_secure_storage_globally.json"
+    tags {
+        app      = "cloudtrail"
+        env      = "shared"
+        project  = "infosec"
+    }
+}
