@@ -16,14 +16,6 @@ data "aws_iam_policy_document" "admin-access-assume-role-policy" {
         }
 
         condition {
-            test = "StringEquals"
-            variable = "aws:PrincipalType"
-            values = [
-                "user",
-            ]
-        }
-
-        condition {
             test = "Bool"
             variable = "aws:MultiFactorAuthPresent"
             values = [
