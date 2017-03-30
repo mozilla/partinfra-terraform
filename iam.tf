@@ -46,7 +46,22 @@ data "aws_iam_policy_document" "community-ops-mfa-policy-document" {
         effect  = "Allow"
         actions = [
             "iam:CreateVirtualMFADevice",
+        ]
+
+        resources = [
+            "arn:aws:iam::${var.aws_account_id}:mfa/$${aws:username}",
+        ]
+    }
+
+    statement {
+        effect  = "Allow"
+        actions = [
             "iam:EnableMFADevice",
+            "iam:GetUser",
+            "iam:ListMFADevices",
+            "iam:ListGroupsForUser",
+            "iam:ListVirtualMFADevices",
+            "iam:ListUsers",
         ]
 
         resources = [
@@ -153,7 +168,6 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
             "iam:GetPolicyVersion",
             "iam:GetRole",
             "iam:GetRolePolicy",
-            "iam:GetUser",
             "iam:GetUserPolicy",
             "iam:ListAccessKeys",
             "iam:ListAttachedGroupPolicies",
@@ -162,14 +176,10 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
             "iam:ListEntitiesForPolicy",
             "iam:ListGroupPolicies",
             "iam:ListGroups",
-            "iam:ListGroupsForUser",
-            "iam:ListMFADevices",
             "iam:ListPolicies",
             "iam:ListPolicyVersions",
             "iam:ListRolePolicies",
             "iam:ListRoles",
-            "iam:ListUsers",
-            "iam:ListVirtualMFADevices",
             "acm:AddTagsToCertificate",
             "acm:DescribeCertificate",
             "acm:GetCertificate",
@@ -224,7 +234,6 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
             "iam:CreateAccessKey",
             "iam:DeactivateMFADevice",
             "iam:DeleteAccessKey",
-            "iam:DeleteVirtualMFADevice",
             "iam:ResyncMFADevice",
             "iam:UpdateAccessKey",
             "iam:UpdateUser",
@@ -235,6 +244,16 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
         ]
     }
 
+    statement {
+        effect    = "Allow"
+        actions   = [
+            "iam:DeactivateMFADevice",
+        ]
+
+        resources = [
+            "arn:aws:iam::${var.aws_account_id}:mfa/$${aws:username}",
+        ]
+    }
 }
 
 resource "aws_iam_role" "community-ops-elevated-role" {
