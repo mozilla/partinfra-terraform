@@ -53,6 +53,17 @@ data "aws_iam_policy_document" "community-ops-mfa-policy-document" {
             "arn:aws:iam::${var.aws_account_id}:user/$${aws:username}",
         ]
     }
+
+    statement {
+        effect  = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        resources = [
+            "${aws_iam_role.community-ops-elevated-role.arn}",
+        ]
+    }
 }
 
 resource "aws_iam_group_policy" "community-ops-mfa-policy" {
