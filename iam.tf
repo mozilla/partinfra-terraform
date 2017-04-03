@@ -46,11 +46,48 @@ data "aws_iam_policy_document" "community-ops-mfa-policy-document" {
         effect  = "Allow"
         actions = [
             "iam:CreateVirtualMFADevice",
+        ]
+
+        resources = [
+            "arn:aws:iam::${var.aws_account_id}:mfa/$${aws:username}",
+        ]
+    }
+
+    statement {
+        effect  = "Allow"
+        actions = [
             "iam:EnableMFADevice",
+            "iam:GetUser",
+            "iam:ListGroupsForUser",
+            "iam:ListVirtualMFADevices",
         ]
 
         resources = [
             "arn:aws:iam::${var.aws_account_id}:user/$${aws:username}",
+        ]
+    }
+
+    statement {
+        effect  = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        resources = [
+            "${aws_iam_role.community-ops-elevated-role.arn}",
+        ]
+    }
+
+    statement {
+        effect  = "Allow"
+        actions = [
+            "iam:ListMFADevices",
+            "iam:ListUsers",
+        ]
+
+        resources = [
+            "arn:aws:iam::${var.aws_account_id}:user/",
+            "arn:aws:iam::${var.aws_account_id}:mfa/",
         ]
     }
 }
@@ -142,7 +179,6 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
             "iam:GetPolicyVersion",
             "iam:GetRole",
             "iam:GetRolePolicy",
-            "iam:GetUser",
             "iam:GetUserPolicy",
             "iam:ListAccessKeys",
             "iam:ListAttachedGroupPolicies",
@@ -151,14 +187,10 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
             "iam:ListEntitiesForPolicy",
             "iam:ListGroupPolicies",
             "iam:ListGroups",
-            "iam:ListGroupsForUser",
-            "iam:ListMFADevices",
             "iam:ListPolicies",
             "iam:ListPolicyVersions",
             "iam:ListRolePolicies",
             "iam:ListRoles",
-            "iam:ListUsers",
-            "iam:ListVirtualMFADevices",
             "acm:AddTagsToCertificate",
             "acm:DescribeCertificate",
             "acm:GetCertificate",
@@ -213,7 +245,6 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
             "iam:CreateAccessKey",
             "iam:DeactivateMFADevice",
             "iam:DeleteAccessKey",
-            "iam:DeleteVirtualMFADevice",
             "iam:ResyncMFADevice",
             "iam:UpdateAccessKey",
             "iam:UpdateUser",
@@ -224,6 +255,16 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
         ]
     }
 
+    statement {
+        effect    = "Allow"
+        actions   = [
+            "iam:DeactivateMFADevice",
+        ]
+
+        resources = [
+            "arn:aws:iam::${var.aws_account_id}:mfa/$${aws:username}",
+        ]
+    }
 }
 
 resource "aws_iam_role" "community-ops-elevated-role" {
@@ -245,4 +286,46 @@ resource "aws_iam_role_policy_attachment" "community-ops-elevated-role-AmazonS3R
 resource "aws_iam_role_policy_attachment" "community-ops-elevated-role-AmazonRDSReadOnlyAccess" {
     role               = "${aws_iam_role.community-ops-elevated-role.name}"
     policy_arn         = "arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess"
+}
+
+# Permissions aren't cascading, so we need to give the role the same permissions
+resource "aws_iam_role_policy" "community-ops-elevated-mfa-policy" {
+    name   = "CommunityOpsMFA"
+    role   = "${aws_iam_role.community-ops-elevated-role.name}"
+    policy = "${data.aws_iam_policy_document.community-ops-mfa-policy-document.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "community-ops-elevated-AmazonEC2ReadOnlyAccess" {
+    role       = "${aws_iam_role.community-ops-elevated-role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "community-ops-elevated-AmazonElastiCacheReadOnlyAccess" {
+    role       = "${aws_iam_role.community-ops-elevated-role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "community-ops-elevated-AmazonRoute53ReadOnlyAccess" {
+    role       = "${aws_iam_role.community-ops-elevated-role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53ReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "community-ops-elevated-AmazonVPCReadOnlyAccess" {
+    role       = "${aws_iam_role.community-ops-elevated-role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "community-ops-elevated-AutoScalingReadOnlyAccess" {
+    role       = "${aws_iam_role.community-ops-elevated-role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/AutoScalingReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "community-ops-elevated-CloudFrontReadOnlyAccess" {
+    role       = "${aws_iam_role.community-ops-elevated-role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/CloudFrontReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "community-ops-elevated-CloudWatchReadOnlyAccess" {
+    role       = "${aws_iam_role.community-ops-elevated-role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
 }
