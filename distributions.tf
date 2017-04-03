@@ -30,9 +30,10 @@ module "badges-mozilla-org" {
   comment             = "Bug 1230266"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mozilla-org-elb-${var.aws_region}")}"
 }
+
 module "mozillaindia-org" {
   source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
-  
+
   origin_domain_path  = "devs.mozillaindia.org"
   origin_path         = "/homepage"
   origin_id           = "gh-pages-dev-mozillaindia-org"
