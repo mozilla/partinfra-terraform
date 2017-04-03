@@ -39,6 +39,6 @@ module "mozillaindia-org" {
   origin_id           = "gh-pages-dev-mozillaindia-org"
   alias               = "mozillaindia.org"
   comment             = "Bug 1344680"
-  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
   }
 }
