@@ -48,7 +48,7 @@ resource "aws_security_group_rule" "admin-ec2-sg-allowallegress" {
 
 resource "aws_instance" "admin-ec2" {
     ami                     = "${lookup(var.aws_amis, "admin-node-2016-07-15")}"  # For bug 1285306
-    instance_type           = "t2.micro"
+    instance_type           = "t2.medium"
     disable_api_termination = true
     key_name                = "ansible"
     vpc_security_group_ids  = ["${aws_security_group.admin-ec2-sg.id}"]
