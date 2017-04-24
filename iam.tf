@@ -219,7 +219,8 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
             "route53:UpdateTrafficPolicyComment",
             "route53:UpdateTrafficPolicyInstance",
             "cloudfront:CreateInvalidation",
-            "cloudfront:ListInvalidations"
+            "cloudfront:ListInvalidations",
+            "cloudwatch:PutMetricData"
         ]
 
         resources = [
