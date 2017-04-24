@@ -98,38 +98,43 @@ resource "aws_iam_group_policy" "community-ops-mfa-policy" {
     policy = "${data.aws_iam_policy_document.community-ops-mfa-policy-document.json}"
 }
 
-resource "aws_iam_group_policy_attachment" "community-ops-AmazonEC2ReadOnlyAccess" {
-    group      = "${aws_iam_group.community-ops.name}"
+resource "aws_iam_role" "community-ops-ro-role" {
+    name               = "CommunityOpsRO"
+    assume_role_policy = "${data.aws_iam_policy_document.community-ops-assume-role-policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "community-ops-AmazonEC2ReadOnlyAccess" {
+    role      = "${aws_iam_role.community-ops-ro-role.name}"
     policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "community-ops-AmazonElastiCacheReadOnlyAccess" {
-    group      = "${aws_iam_group.community-ops.name}"
+resource "aws_iam_role_policy_attachment" "community-ops-AmazonElastiCacheReadOnlyAccess" {
+    role      = "${aws_iam_role.community-ops-ro-role.name}"
     policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheReadOnlyAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "community-ops-AmazonRoute53ReadOnlyAccess" {
-    group      = "${aws_iam_group.community-ops.name}"
+resource "aws_iam_role_policy_attachment" "community-ops-AmazonRoute53ReadOnlyAccess" {
+    role      = "${aws_iam_role.community-ops-ro-role.name}"
     policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53ReadOnlyAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "community-ops-AmazonVPCReadOnlyAccess" {
-    group      = "${aws_iam_group.community-ops.name}"
+resource "aws_iam_role_policy_attachment" "community-ops-AmazonVPCReadOnlyAccess" {
+    role      = "${aws_iam_role.community-ops-ro-role.name}"
     policy_arn = "arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "community-ops-AutoScalingReadOnlyAccess" {
-    group      = "${aws_iam_group.community-ops.name}"
+resource "aws_iam_role_policy_attachment" "community-ops-AutoScalingReadOnlyAccess" {
+    role      = "${aws_iam_role.community-ops-ro-role.name}"
     policy_arn = "arn:aws:iam::aws:policy/AutoScalingReadOnlyAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "community-ops-CloudFrontReadOnlyAccess" {
-    group      = "${aws_iam_group.community-ops.name}"
+resource "aws_iam_role_policy_attachment" "community-ops-CloudFrontReadOnlyAccess" {
+    role      = "${aws_iam_role.community-ops-ro-role.name}"
     policy_arn = "arn:aws:iam::aws:policy/CloudFrontReadOnlyAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "community-ops-CloudWatchReadOnlyAccess" {
-    group      = "${aws_iam_group.community-ops.name}"
+resource "aws_iam_role_policy_attachment" "community-ops-CloudWatchReadOnlyAccess" {
+    role      = "${aws_iam_role.community-ops-ro-role.name}"
     policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
 }
 
