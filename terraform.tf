@@ -9,6 +9,14 @@ provider "aws" {
   region = "us-west-1"
 }
 
+terraform {
+    backend "s3" {
+        bucket = "partinfra-tfsync"
+        key    = "network/terraform.tfstate"
+        region = "us-east-1"
+    }
+}
+
 resource "aws_s3_bucket" "partinfra-tfsync" {
     bucket          = "${var.tf-sync-bucket}"
     acl             = "private"
