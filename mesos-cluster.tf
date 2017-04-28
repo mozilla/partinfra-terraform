@@ -17,6 +17,8 @@ module "mesos-cluster-staging" {
     subnet2              = "${aws_subnet.apps-staging-1c.id}"
     subnet3              = "${aws_subnet.apps-staging-1d.id}"
     sns_topic_arn        = "${aws_sns_topic.sns-cloudwatch-partinfra.arn}"
+    aws_account_id       = "${var.aws_account_id}"
+    adminaccessrole-uid  = "${aws_iam_role.admin-access-role.unique_id}"
 }
 
 module "mesos-cluster-production" {
@@ -37,4 +39,6 @@ module "mesos-cluster-production" {
     subnet2              = "${aws_subnet.apps-production-1c.id}"
     subnet3              = "${aws_subnet.apps-production-1d.id}"
     sns_topic_arn        = "${aws_sns_topic.sns-cloudwatch-partinfra.arn}"
+    aws_account_id       = "${var.aws_account_id}"
+    adminaccessrole-uid  = "${aws_iam_role.admin-access-role.unique_id}"
 }
