@@ -80,15 +80,6 @@ resource "aws_security_group_rule" "jenkins-public-efs-sg-allownfsfromjenkins" {
     security_group_id = "${aws_security_group.jenkins-public-efs-sg.id}"
 }
 
-resource "aws_security_group_rule" "jenkins-public-efs-sg-allownfsfromadmin" {
-    type              = "ingress"
-    from_port         = 2049
-    to_port           = 2049
-    protocol          = "tcp"
-    source_security_group_id = "${aws_security_group.admin-ec2-sg.id}"
-    security_group_id = "${aws_security_group.jenkins-public-efs-sg.id}"
-}
-
 resource "aws_efs_file_system" "jenkins-public-efs" {
   tags {
     Name = "jenkins-public-efs"
