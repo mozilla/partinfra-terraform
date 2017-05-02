@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "community-ops-mfa-policy-document" {
 
         resources = [
             "${aws_iam_role.community-ops-elevated-role.arn}",
-            "${aws_iam_role.community-ops-ro-role-role.arn}",
+            "${aws_iam_role.community-ops-ro-role.arn}",
         ]
     }
 
