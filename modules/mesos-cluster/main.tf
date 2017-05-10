@@ -181,6 +181,11 @@ resource "aws_autoscaling_group" "mesos-slave-as" {
       value                 = "mesosslave"
       propagate_at_launch   = true
     }
+    tag {
+      key                   = "cluster"
+      value                 = "generic"
+      propagate_at_launch   = true
+    }
     lifecycle {
       create_before_destroy = true
     }
