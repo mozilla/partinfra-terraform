@@ -9,6 +9,7 @@ variable "aws_amis" {
     us-east-1 = "ami-fce3c696"
     admin-node-2016-07-15 = "ami-68d8557f"
     debian-jessie-8-4 = "ami-45374b25"
+    us-east-1-ubuntu-16-04 = "ami-80861296"
   }
 }
 
