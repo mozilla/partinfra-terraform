@@ -23,6 +23,7 @@ data "aws_iam_policy_document" "jenkins-backup-bucket-policy" {
             variable = "aws:userId"
             values = [
                 "${aws_iam_role.admin-access-role.unique_id}:*",
+                "${var.terraform_role_id}:*",
                 "${var.aws_account_id}"
             ]
         }

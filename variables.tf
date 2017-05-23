@@ -42,3 +42,7 @@ variable "ssl_certificates" {
     analytics-us-west-1 = "arn:aws:acm:us-west-1:484535289196:certificate/b09c28f0-a98e-409c-b614-be356e9c593c"
   }
 }
+
+variable "terraform_role_id" {
+    default = "AROAJQQ4P767MJJUWKKVK" # admin-ec2-role AWS role
+}
