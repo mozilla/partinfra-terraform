@@ -5,6 +5,7 @@ variable "service_security_group_id" {}
 variable "environment" {}
 variable "fqdn" {}
 variable "ssl_certificate" {}
+variable "aws_account_id" {}
 
 resource "aws_security_group" "discourse-redis-sg" {
     name                     = "discourse-redis-shared-sg"
@@ -67,6 +68,32 @@ resource "aws_s3_bucket" "discourse-content" {
         env = "${var.environment}"
         project = "discourse"
     }
+}
+
+data "aws_iam_policy_document" "discourse-content-policy" {
+  statement {
+    sid = "1"
+    effect = "Allow"
+    actions = [
+      "s3:*",
+    ]
+    principals = {
+        type = "AWS"
+        identifiers = [
+            "arn:aws:iam::${var.aws_account_id}:user/discourse-${var.environment}-ses-s3",
+        ]
+    }
+    resources = [
+      "${aws_s3_bucket.discourse-content.arn}",
+      "${aws_s3_bucket.discourse-content.arn}/*",
+    ]
+  }
+}
+
+
+resource "aws_s3_bucket_policy" "discourse-content-policy-attachment" {
+  bucket = "${aws_s3_bucket.discourse-content.id}"
+  policy = "${data.aws_iam_policy_document.discourse-content-policy.json}"
 }
 
 module "discourse-cdn" {

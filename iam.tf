@@ -1,3 +1,14 @@
+variable "community-ops-buckets" {
+    default = [
+        "blog.mozillaindia.org",
+        "discourse-staging-emailin",
+        "equal-rating-wp-content",
+        "guides.mozilla-community.org",
+        "innoprize-hostmaster-email",
+        "mainwp-paas-remote-backups"
+    ]
+}
+
 data "aws_iam_policy_document" "admin-access-assume-role-policy" {
 
     statement {
@@ -271,6 +282,18 @@ data "aws_iam_policy_document" "community-ops-elevated-policy" {
         resources = [
             "arn:aws:iam::${var.aws_account_id}:mfa/$${aws:username}",
         ]
+    }
+
+    statement {
+        effect    = "Allow"
+        actions   = [
+            "s3:*",
+        ]
+
+        resources = "${concat(
+            formatlist("%s%s", "arn:aws:s3:::", var.community-ops-buckets),
+            formatlist("%s%s/*", "arn:aws:s3:::", var.community-ops-buckets)
+        )}"
     }
 }
 
