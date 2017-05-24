@@ -27,6 +27,15 @@ resource "aws_security_group_rule" "admin-ec2-sg-allowsharedjenkins" {
     security_group_id        = "${aws_security_group.admin-ec2-sg.id}"
 }
 
+resource "aws_security_group_rule" "admin-ec2-sg-allowsharedgrafana" {
+    type                     = "ingress"
+    from_port                = 3000
+    to_port                  = 3000
+    protocol                 = "tcp"
+    cidr_blocks              = ["${aws_vpc.apps-shared-vpc.cidr_block}"]
+    security_group_id        = "${aws_security_group.admin-ec2-sg.id}"
+}
+
 resource "aws_security_group_rule" "admin-ec2-sg-allowhttpfromadmin-elb" {
     type                     = "ingress"
     from_port                = 80
