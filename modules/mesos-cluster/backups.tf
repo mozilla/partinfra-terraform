@@ -23,6 +23,7 @@ data "aws_iam_policy_document" "marathon-backup-buckets-policy" {
             variable = "aws:userId"
             values = [
                 "${var.adminaccessrole-uid}:*",
+                "${var.terraform_role_id}:*",
                 "${var.aws_account_id}"
             ]
         }
