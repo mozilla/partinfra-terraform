@@ -6,6 +6,7 @@ variable "environment" {}
 variable "fqdn" {}
 variable "ssl_certificate" {}
 variable "aws_account_id" {}
+variable "InfosecSecurityAuditRole_uid" {}
 
 resource "aws_security_group" "discourse-redis-sg" {
     name                     = "discourse-redis-shared-sg"
@@ -83,6 +84,32 @@ data "aws_iam_policy_document" "discourse-content-policy" {
             "arn:aws:iam::${var.aws_account_id}:user/discourse-${var.environment}-ses-s3",
         ]
     }
+    resources = [
+      "${aws_s3_bucket.discourse-content.arn}",
+      "${aws_s3_bucket.discourse-content.arn}/*",
+    ]
+  }
+
+  statement {
+    effect = "Deny"
+    actions = [
+      "s3:*",
+    ]
+
+    principals {
+        type = "AWS"
+        identifiers = ["*"]
+    }
+
+    condition {
+        test = "StringNotLike"
+        variable = "aws:userId"
+        values = [
+            "${var.InfosecSecurityAuditRole_uid}:*",
+            "${var.aws_account_id}"
+        ]
+    }
+
     resources = [
       "${aws_s3_bucket.discourse-content.arn}",
       "${aws_s3_bucket.discourse-content.arn}/*",

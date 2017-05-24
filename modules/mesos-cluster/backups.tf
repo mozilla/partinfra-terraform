@@ -23,7 +23,8 @@ data "aws_iam_policy_document" "marathon-backup-buckets-policy" {
             variable = "aws:userId"
             values = [
                 "${var.adminaccessrole-uid}:*",
-                "${var.terraform_role_id}:*",
+                "${lookup(var.unmanaged_role_ids, "admin-ec2-role")}:*",
+                "${lookup(var.unmanaged_role_ids, "InfosecSecurityAuditRole")}:*",
                 "${var.aws_account_id}"
             ]
         }

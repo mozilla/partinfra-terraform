@@ -43,6 +43,10 @@ variable "ssl_certificates" {
   }
 }
 
-variable "terraform_role_id" {
-    default = "AROAJQQ4P767MJJUWKKVK" # admin-ec2-role AWS role
+variable "unmanaged_role_ids" {
+    type = "map"
+    default = {
+        admin-ec2-role = "AROAJQQ4P767MJJUWKKVK"
+        InfosecSecurityAuditRole = "AROAJHELZZZIXWALL3AVS"
+    }
 }
