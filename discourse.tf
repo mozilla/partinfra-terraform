@@ -9,6 +9,7 @@ module "discourse-production" {
     fqdn                                = "discourse.mozilla-community.org"
     ssl_certificate                     = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
     aws_account_id                      = "${var.aws_account_id}"
+    InfosecSecurityAuditRole_uid        = "${lookup(var.unmanaged_role_ids, "InfosecSecurityAuditRole")}"
 }
 
 module "discourse-staging" {
@@ -22,4 +23,5 @@ module "discourse-staging" {
     fqdn                                = "discourse.staging.paas.mozilla.community"
     ssl_certificate                     = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
     aws_account_id                      = "${var.aws_account_id}"
+    InfosecSecurityAuditRole_uid        = "${lookup(var.unmanaged_role_ids, "InfosecSecurityAuditRole")}"
 }
