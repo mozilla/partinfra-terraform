@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "vpn-access-policy" {
 
 resource "aws_iam_instance_profile" "vpn-profile" {
     name = "vpn-profile"
-    roles = ["vpn-role"]
+    roles = ["${aws_iam_role.vpn-role.name}"]
 }
 
 resource "aws_security_group" "openvpn-ec2-sg" {
