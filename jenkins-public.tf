@@ -1,3 +1,35 @@
+data "aws_iam_policy_document" "jenkins-assume-role-policy" {
+
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        principals {
+            type = "Service"
+            identifiers = [
+                "ec2.amazonaws.com"
+            ]
+        }
+    }
+}
+
+resource "aws_iam_role" "jenkins-role" {
+    name = "JenkinsRole"
+    assume_role_policy = "${data.aws_iam_policy_document.jenkins-assume-role-policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "jenkins-access-policy" {
+    role = "${aws_iam_role.jenkins-role.name}"
+    policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
+}
+
+resource "aws_iam_instance_profile" "jenkins-profile" {
+    name = "jenkins-profile"
+    roles = ["consul-role"]
+}
+
 resource "aws_security_group" "jenkins-public-ec2-sg" {
     name                    = "jenkins-public-ec2-sg"
     description             = "jenkins-public SG"
@@ -92,6 +124,7 @@ resource "aws_instance" "jenkins-public-ec2" {
     disable_api_termination = true
     key_name                = "ansible"
     vpc_security_group_ids  = ["${aws_security_group.jenkins-public-ec2-sg.id}"]
+    iam_instance_profile    = "${aws_iam_instance_profile.jenkins-profile.name}"
     subnet_id               = "${aws_subnet.apps-shared-1c.id}"
 
     root_block_device {

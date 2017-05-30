@@ -1,3 +1,35 @@
+data "aws_iam_policy_document" "vpn-assume-role-policy" {
+
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        principals {
+            type = "Service"
+            identifiers = [
+                "ec2.amazonaws.com"
+            ]
+        }
+    }
+}
+
+resource "aws_iam_role" "vpn-role" {
+    name = "VpnRole"
+    assume_role_policy = "${data.aws_iam_policy_document.vpn-assume-role-policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "vpn-access-policy" {
+    role = "${aws_iam_role.vpn-role.name}"
+    policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
+}
+
+resource "aws_iam_instance_profile" "vpn-profile" {
+    name = "vpn-profile"
+    roles = ["vpn-role"]
+}
+
 resource "aws_security_group" "openvpn-ec2-sg" {
     name                    = "openvpn-ec2-sg"
     description             = "OpenVPN SG"
@@ -37,6 +69,7 @@ resource "aws_instance" "openvpn-ec2" {
     disable_api_termination = true
     key_name                = "ansible"
     vpc_security_group_ids  = ["${aws_security_group.openvpn-ec2-sg.id}"]
+    iam_instance_profile    = "${aws_iam_instance_profile.vpn-profile.name}"
     subnet_id               = "${aws_subnet.apps-shared-1c.id}"
 
     tags {
