@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "jenkins-access-policy" {
 
 resource "aws_iam_instance_profile" "jenkins-profile" {
     name = "jenkins-profile"
-    roles = ["consul-role"]
+    roles = ["${aws_iam_role.jenkins-role.name}"]
 }
 
 resource "aws_security_group" "jenkins-public-ec2-sg" {

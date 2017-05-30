@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "consul-access-policy" {
 
 resource "aws_iam_instance_profile" "consul-profile" {
     name = "consul-profile"
-    roles = ["consul-role"]
+    roles = ["${aws_iam_role.consul-role.name}"]
 }
 
 resource "aws_security_group" "consul-shared-ec2-sg" {
