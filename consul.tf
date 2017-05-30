@@ -1,3 +1,35 @@
+data "aws_iam_policy_document" "consul-assume-role-policy" {
+
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        principals {
+            type = "Service"
+            identifiers = [
+                "ec2.amazonaws.com"
+            ]
+        }
+    }
+}
+
+resource "aws_iam_role" "consul-role" {
+    name = "ConsulRole"
+    assume_role_policy = "${data.aws_iam_policy_document.consul-assume-role-policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "consul-access-policy" {
+    role = "${aws_iam_role.consul-role.name}"
+    policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
+}
+
+resource "aws_iam_instance_profile" "consul-profile" {
+    name = "consul-profile"
+    roles = ["consul-role"]
+}
+
 resource "aws_security_group" "consul-shared-ec2-sg" {
     name        = "consul-shared-ec2-sg"
     description = "Consul SG"
@@ -30,6 +62,7 @@ resource "aws_launch_configuration" "consul-shared-ec2-lc" {
   instance_type               = "t2.micro"
   key_name                    = "ansible"
   security_groups             = ["${aws_security_group.consul-shared-ec2-sg.id}"]
+  iam_instance_profile        = "${aws_iam_instance_profile.consul-profile.name}"
   associate_public_ip_address = true
   root_block_device {
     volume_size               = 100
