@@ -6,9 +6,12 @@ module "mesos-cluster-staging" {
     environment          = "staging"
     master_instance_type = "t2.micro"
     slave_instance_type  = "t2.medium"
-    slave_as_max_size   = 5
-    slave_as_desired_capacity = 3
-    slave_as_min_size   = 3
+    slave_as_max_size   = 1
+    slave_as_desired_capacity = 1
+    slave_as_min_size   = 1
+    master_as_max_size   = 1
+    master_as_desired_capacity = 1
+    master_as_min_size   = 1
 
     vpc_id               = "${aws_vpc.apps-staging-vpc.id}"
     shared_vpc_cidr      = "${aws_vpc.apps-shared-vpc.cidr_block}"
@@ -31,6 +34,9 @@ module "mesos-cluster-production" {
     slave_as_max_size   = 5
     slave_as_desired_capacity = 5
     slave_as_min_size   = 5
+    master_as_max_size   = 5
+    master_as_desired_capacity = 3
+    master_as_min_size   = 3
 
     vpc_id               = "${aws_vpc.apps-production-vpc.id}"
     shared_vpc_cidr      = "${aws_vpc.apps-shared-vpc.cidr_block}"

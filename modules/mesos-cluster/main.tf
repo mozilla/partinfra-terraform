@@ -11,6 +11,10 @@ variable "sns_topic_arn" {}
 variable "slave_as_max_size" {}
 variable "slave_as_desired_capacity" {}
 variable "slave_as_min_size" {}
+variable "master_as_max_size" {}
+variable "master_as_desired_capacity" {}
+variable "master_as_min_size" {}
+
 
 data "aws_iam_policy_document" "mesos-assume-role-policy" {
 
@@ -109,7 +113,7 @@ resource "aws_launch_configuration" "mesos-master-ec2-lc" {
 
 resource "aws_launch_configuration" "mesos-slave-ec2-lc" {
   name_prefix                 = "mesos-slave-${var.environment}-lc-"
-  image_id                    = "${lookup(var.aws_amis, var.aws_region)}"
+  image_id                    = "${var.environment == "production" ? lookup(var.aws_amis, var.aws_region) : lookup(var.aws_amis, format("%s-%s", var.aws_region, "ubuntu-16-04"))}"
   instance_type               = "${var.slave_instance_type}"
   key_name                    = "ansible"
   security_groups             = ["${aws_security_group.mesos-slave-ec2-sg.id}"]
@@ -127,9 +131,9 @@ resource "aws_autoscaling_group" "mesos-master-as" {
     name                    = "mesos-master-${var.environment}-as"
     launch_configuration    = "${aws_launch_configuration.mesos-master-ec2-lc.id}"
     availability_zones      = ["${split(",", lookup(var.aws_availibility_zones, var.aws_region))}"]
-    max_size                = 5
-    desired_capacity        = 3
-    min_size                = 3
+    max_size                = "${var.master_as_max_size}"
+    desired_capacity        = "${var.master_as_desired_capacity}"
+    min_size                = "${var.master_as_min_size}"
     load_balancers          = ["${aws_elb.mesos-elb.id}", "${aws_elb.community-sites-elb.id}", "${aws_elb.mozilla-org-elb.id}"]
     vpc_zone_identifier     = ["${var.subnet1}", "${var.subnet2}", "${var.subnet3}"]
     tag {
