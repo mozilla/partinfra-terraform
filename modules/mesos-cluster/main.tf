@@ -97,7 +97,7 @@ resource "aws_route53_record" "paas-default-dns-zone" {
 
 resource "aws_launch_configuration" "mesos-master-ec2-lc" {
   name_prefix                 = "mesos-master-${var.environment}-lc-"
-  image_id                    = "${lookup(var.aws_amis, var.aws_region)}"
+  image_id                    = "${var.environment == "production" ? lookup(var.aws_amis, var.aws_region) : lookup(var.aws_amis, format("%s-%s", var.aws_region, "ubuntu-16-04"))}"
   instance_type               = "${var.master_instance_type}"
   key_name                    = "ansible"
   security_groups             = ["${aws_security_group.mesos-master-ec2-sg.id}"]
