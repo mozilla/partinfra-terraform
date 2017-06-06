@@ -30,10 +30,10 @@ module "mesos-cluster-production" {
     name                 = "mesos-cluster-production"
     environment          = "production"
     master_instance_type = "t2.micro"
-    slave_instance_type  = "t2.medium"
+    slave_instance_type  = "t2.xlarge"
     slave_as_max_size   = 5
     slave_as_desired_capacity = 5
-    slave_as_min_size   = 5
+    slave_as_min_size   = 3
     master_as_max_size   = 5
     master_as_desired_capacity = 3
     master_as_min_size   = 3
