@@ -60,7 +60,7 @@ resource "aws_db_instance" "mysql-shared-db" {
     allocated_storage    = 40
     engine               = "mysql"
     engine_version       = "5.6.27"
-    instance_class       = "db.t2.medium"
+    instance_class       = "db.t2.small"
     publicly_accessible  = false
     backup_retention_period = 7
     apply_immediately    = true
