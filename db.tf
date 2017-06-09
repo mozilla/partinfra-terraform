@@ -198,7 +198,6 @@ resource "aws_db_instance" "mysql-mozillians-db-rr" {
     username             = "root"
     password             = "${var.mysql-mozillians-db_password}"
     vpc_security_group_ids = ["${aws_security_group.mozillians-prod-rds-sg.id}"]
-    db_subnet_group_name = "${aws_db_subnet_group.apps-production-rds-subnetgroup.name}"
     parameter_group_name = "default.mysql5.6"
     tags {
         Name                = "mysql-mozillians-db-rr"
