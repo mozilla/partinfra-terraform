@@ -189,9 +189,9 @@ resource "aws_db_instance" "mysql-mozillians-db-rr" {
     engine_version       = "5.6.27"
     instance_class       = "db.t2.small"
     publicly_accessible  = false
-    backup_retention_period = 14
+    backup_retention_period = 0
     apply_immediately    = true
-    multi_az             = true
+    multi_az             = false
     storage_type         = "gp2"
     final_snapshot_identifier = "mysql-mozillians-db-rr-final"
     name                 = "mozilliansdb"
