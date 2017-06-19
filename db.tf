@@ -194,7 +194,7 @@ resource "aws_db_instance" "mysql-mozillians-db-rr" {
     multi_az             = true
     storage_type         = "gp2"
     final_snapshot_identifier = "mysql-mozillians-db-rr-final"
-    name                 = "mozilliansdb-rr"
+    name                 = "mozilliansdb"
     username             = "root"
     password             = "${var.mysql-mozillians-db_password}"
     vpc_security_group_ids = ["${aws_security_group.mozillians-prod-rds-sg.id}"]
