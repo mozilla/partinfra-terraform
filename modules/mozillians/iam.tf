@@ -14,7 +14,8 @@ data "aws_iam_policy_document" "mozillians-bucket-policy" {
     statement {
         effect = "Allow"
         actions = [
-            "ses:SendRawEmail"
+            "ses:SendRawEmail",
+            "ses:GetSendQuota"
         ]
 
         resources = [
