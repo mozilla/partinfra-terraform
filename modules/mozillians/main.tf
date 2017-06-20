@@ -3,6 +3,7 @@ variable "vpc_id" {}
 variable "service_security_group_id" {}
 variable "elasticache_instance_size" {}
 variable "elasticache_subnet_group" {}
+variable "elasticsearch_arn" {}
 
 resource "aws_security_group" "mozillians-redis-sg" {
     name                     = "mozillians-redis-${var.environment}-sg"
@@ -43,5 +44,17 @@ resource "aws_elasticache_cluster" "mozillians-redis-ec" {
         app                    = "redis"
         env                    = "${var.environment}"
         project                = "mozillians"
+    }
+}
+
+resource "aws_s3_bucket" "exports-bucket" {
+    bucket = "mozillians-${var.environment}-exports"
+    acl = "private"
+
+    tags = {
+        Name = "mozillians-${var.environment}-exports"
+        app = "mozillians"
+        env = "${var.environment}"
+        project = "mozillians"
     }
 }
