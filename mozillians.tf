@@ -34,10 +34,48 @@ resource "aws_security_group_rule" "mozillians-slave-ec2-sg-allowallfromshared" 
     security_group_id = "${aws_security_group.mozillians-slave-ec2-sg.id}"
 }
 
+data "aws_iam_policy_document" "mozillians-production-assume-role-policy" {
+
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        principals {
+            type = "Service"
+            identifiers = [
+                "ec2.amazonaws.com"
+            ]
+        }
+    }
+}
+
+resource "aws_iam_role" "mozillians-production-role" {
+    name = "mozillians-production-role"
+    assume_role_policy = "${data.aws_iam_policy_document.mozillians-production-assume-role-policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "mozillians-production-mozdef-policy" {
+    role = "${aws_iam_role.mozillians-production-role.name}"
+    policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "mozillians-production-access-policy" {
+    role = "${aws_iam_role.mozillians-production-role.name}"
+    policy_arn = "${module.mozillians-production.aws-access-policy-arn}"
+}
+
+resource "aws_iam_instance_profile" "mozillians-production-profile" {
+    name = "mozillians-production-profile"
+    roles = ["${aws_iam_role.mozillians-production-role.name}"]
+}
+
 resource "aws_launch_configuration" "mozillians-slave-ec2-lc" {
   name_prefix                 = "mozillians-slave-production-lc"
   image_id                    = "${lookup(var.aws_amis, var.aws_region)}"
   instance_type               = "t2.medium"
+  iam_instance_profile        = "${aws_iam_instance_profile.mozillians-production-profile.name}"
   key_name                    = "ansible"
   security_groups             = ["${aws_security_group.mozillians-slave-ec2-sg.id}"]
   associate_public_ip_address = true
