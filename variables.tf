@@ -37,7 +37,7 @@ variable "paas-mozilla-community-zone-id" {
 variable "ssl_certificates" {
   type = "map"
   default = {
-    community-sites-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/6374f3d2-b6d0-4832-aa3b-123eed5a6347"
+    community-sites-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/0e238233-2f70-4d3f-8bfa-9fa78db299be"
     mozilla-org-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/73b4dc75-9193-4884-9967-7c575e640a69"
     mesos-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
     analytics-us-west-1 = "arn:aws:acm:us-west-1:484535289196:certificate/b09c28f0-a98e-409c-b614-be356e9c593c"
