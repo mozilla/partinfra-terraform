@@ -98,6 +98,17 @@ module "mozillians-staging" {
     elasticsearch_arn                   = "${aws_elasticsearch_domain.mozillians-es.arn}"
 }
 
+module "mozillians-production" {
+    source                              = "./modules/mozillians"
+
+    environment                         = "prod"
+    vpc_id                              = "${aws_vpc.apps-production-vpc.id}"
+    elasticache_instance_size           = "cache.t2.micro"
+    service_security_group_id           = "${aws_security_group.mozillians-slave-ec2-sg.id}"
+    elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
+    elasticsearch_arn                   = "${aws_elasticsearch_domain.mozillians-es.arn}"
+}
+
 resource "aws_elasticsearch_domain" "mozillians-es" {
     domain_name                       = "mozillians-shared-es"
     elasticsearch_version             = "2.3"
