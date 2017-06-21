@@ -53,3 +53,7 @@ resource "aws_iam_policy" "aws-access-policy" {
   description = "Mozillians ${var.environment} IAM policy for S3/SES/ES"
   policy = "${data.aws_iam_policy_document.mozillians-bucket-policy.json}"
 }
+
+output "aws-access-policy-arn" {
+  value = "${aws_iam_policy.aws-access-policy.arn}"
+}
