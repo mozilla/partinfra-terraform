@@ -14,7 +14,9 @@ variable "slave_as_min_size" {}
 variable "master_as_max_size" {}
 variable "master_as_desired_capacity" {}
 variable "master_as_min_size" {}
-
+variable "mozillians-slave-ec2-sg-id" { 
+    default = ""
+}
 
 data "aws_iam_policy_document" "mesos-assume-role-policy" {
 

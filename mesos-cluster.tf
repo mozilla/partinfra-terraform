@@ -47,4 +47,5 @@ module "mesos-cluster-production" {
     sns_topic_arn        = "${aws_sns_topic.sns-cloudwatch-partinfra.arn}"
     aws_account_id       = "${var.aws_account_id}"
     adminaccessrole-uid  = "${aws_iam_role.admin-access-role.unique_id}"
+    mozillians-slave-ec2-sg-id = "${aws_security_group.mozillians-slave-ec2-sg.id}"
 }
