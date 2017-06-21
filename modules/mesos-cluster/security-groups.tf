@@ -73,6 +73,16 @@ resource "aws_security_group_rule" "mesos-master-ec2-sg-allowallfromslave" {
 
     security_group_id        = "${aws_security_group.mesos-master-ec2-sg.id}"
 }
+resource "aws_security_group_rule" "mesos-master-ec2-sg-allowallfrommozillians" {
+    count                    = "${var.environment == "production" ? 1 : 0}"
+    type                     = "ingress"
+    from_port                = 0
+    to_port                  = 0
+    protocol                 = "-1"
+    source_security_group_id = "${var.mozillians-slave-ec2-sg-id}"
+
+    security_group_id        = "${aws_security_group.mesos-master-ec2-sg.id}"
+}
 resource "aws_security_group_rule" "mesos-master-ec2-sg-allowall" {
     type              = "egress"
     from_port         = 0
