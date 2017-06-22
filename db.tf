@@ -180,29 +180,3 @@ resource "aws_db_instance" "mysql-mozillians-db" {
         project             = "mozillians"
     }
 }
-
-resource "aws_db_instance" "mysql-mozillians-db-rr" {
-    replicate_source_db  = "${aws_db_instance.mysql-mozillians-db.identifier}"
-
-    allocated_storage    = 5
-    engine               = "mysql"
-    engine_version       = "5.6.27"
-    instance_class       = "db.t2.small"
-    publicly_accessible  = false
-    backup_retention_period = 0
-    apply_immediately    = true
-    multi_az             = false
-    storage_type         = "gp2"
-    final_snapshot_identifier = "mysql-mozillians-db-rr-final"
-    name                 = "mozilliansdb"
-    username             = "root"
-    password             = "${var.mysql-mozillians-db_password}"
-    vpc_security_group_ids = ["${aws_security_group.mozillians-prod-rds-sg.id}"]
-    parameter_group_name = "default.mysql5.6"
-    tags {
-        Name                = "mysql-mozillians-db-rr"
-        app                 = "mysql"
-        env                 = "production"
-        project             = "mozillians"
-    }
-}
