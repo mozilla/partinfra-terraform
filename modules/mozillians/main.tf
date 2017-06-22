@@ -1,7 +1,8 @@
 variable "environment" {}
 variable "vpc_id" {}
 variable "service_security_group_id" {}
-variable "elasticache_instance_size" {}
+variable "elasticache_redis_instance_size" {}
+variable "elasticache_memcached_instance_size" {}
 variable "elasticache_subnet_group" {}
 variable "elasticsearch_arn" {}
 
@@ -20,6 +21,15 @@ resource "aws_security_group_rule" "mozillians-redis-sg-allowredisfromslaves" {
     security_group_id        = "${aws_security_group.mozillians-redis-sg.id}"
 }
 
+resource "aws_security_group_rule" "mozillians-redis-sg-allowmemcachedfromslaves" {
+    type                     = "ingress"
+    from_port                = 11211
+    to_port                  = 11211
+    protocol                 = "tcp"
+    source_security_group_id = "${var.service_security_group_id}"
+    security_group_id        = "${aws_security_group.mozillians-redis-sg.id}"
+}
+
 resource "aws_security_group_rule" "mozillians-redis-sg-allowegress" {
     type                     = "egress"
     from_port                = 0
@@ -33,7 +43,7 @@ resource "aws_elasticache_cluster" "mozillians-redis-ec" {
     cluster_id                 = "mozillians-${var.environment}"
     engine                     = "redis"
     engine_version             = "2.8.24"
-    node_type                  = "${var.elasticache_instance_size}"
+    node_type                  = "${var.elasticache_redis_instance_size}"
     port                       = 6379
     num_cache_nodes            = 1
     parameter_group_name       = "default.redis2.8"
@@ -56,5 +66,23 @@ resource "aws_s3_bucket" "exports-bucket" {
         app = "mozillians"
         env = "${var.environment}"
         project = "mozillians"
+    }
+}
+
+resource "aws_elasticache_cluster" "mozillians-memcached-ec" {
+    cluster_id                 = "mozcache-${var.environment}"
+    engine                     = "memcached"
+    engine_version             = "1.4.34"
+    node_type                  = "${var.elasticache_memcached_instance_size}"
+    port                       = 11211
+    num_cache_nodes            = 1
+    parameter_group_name       = "default.memcached1.4"
+    subnet_group_name          = "${var.elasticache_subnet_group}"
+    security_group_ids         = ["${aws_security_group.mozillians-redis-sg.id}"]
+    tags {
+        Name                   = "mozillians-${var.environment}-memcached"
+        app                    = "memcached"
+        env                    = "${var.environment}"
+        project                = "mozillians"
     }
 }

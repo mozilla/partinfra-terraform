@@ -130,7 +130,8 @@ module "mozillians-staging" {
 
     environment                         = "staging"
     vpc_id                              = "${aws_vpc.apps-production-vpc.id}"
-    elasticache_instance_size           = "cache.t2.micro"
+    elasticache_redis_instance_size     = "cache.t2.micro"
+    elasticache_memcached_instance_size = "cache.t2.micro"
     service_security_group_id           = "${module.mesos-cluster-production.mesos-cluster-slave-sg-id}"
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
     elasticsearch_arn                   = "${aws_elasticsearch_domain.mozillians-es.arn}"
@@ -141,7 +142,8 @@ module "mozillians-production" {
 
     environment                         = "prod"
     vpc_id                              = "${aws_vpc.apps-production-vpc.id}"
-    elasticache_instance_size           = "cache.t2.micro"
+    elasticache_redis_instance_size     = "cache.t2.micro"
+    elasticache_memcached_instance_size = "cache.t2.micro"
     service_security_group_id           = "${aws_security_group.mozillians-slave-ec2-sg.id}"
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
     elasticsearch_arn                   = "${aws_elasticsearch_domain.mozillians-es.arn}"
