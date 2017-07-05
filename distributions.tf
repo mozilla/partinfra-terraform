@@ -41,3 +41,25 @@ module "mozillaindia-org" {
   comment             = "Bug 1344680"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
 }
+
+resource "aws_s3_bucket" "equalrating-archive-bucket" {
+    bucket = "challenge.equalrating.com"
+    acl = "public"
+
+    tags = {
+        Name = "challenge.equalrating.com"
+        project = "equalrating"
+    }
+}
+
+
+module "challenge-equalrating-com" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+
+  origin_domain_name  = "s3.amazonaws.com"
+  origin_path         = "/challenge.equalrating.com"
+  origin_id           = "s3-challenge-equalrating-com"
+  alias               = "challenge.equalrating.com"
+  comment             = "parsys/issues/196"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
+}
