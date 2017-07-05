@@ -94,6 +94,7 @@ data "aws_iam_policy_document" "community-ops-mfa-policy-document" {
         effect  = "Allow"
         actions = [
             "iam:ListMFADevices",
+            "iam:ListVirtualMFADevices",
             "iam:ListUsers",
         ]
 
