@@ -44,7 +44,7 @@ module "mozillaindia-org" {
 
 resource "aws_s3_bucket" "equalrating-archive-bucket" {
     bucket = "challenge.equalrating.com"
-    acl = "public"
+    acl = "public-read"
 
     tags = {
         Name = "challenge.equalrating.com"
