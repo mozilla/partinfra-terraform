@@ -309,9 +309,9 @@ resource "aws_iam_role_policy" "community-ops-elevated-role-policy" {
     policy = "${data.aws_iam_policy_document.community-ops-elevated-policy.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "community-ops-elevated-role-AmazonS3ReadOnlyAccess" {
+resource "aws_iam_role_policy_attachment" "community-ops-elevated-role-AmazonS3FullAccess" {
     role               = "${aws_iam_role.community-ops-elevated-role.name}"
-    policy_arn         = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+    policy_arn         = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "community-ops-elevated-role-AmazonRDSReadOnlyAccess" {
