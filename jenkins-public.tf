@@ -178,7 +178,7 @@ resource "aws_elb" "jenkins-public-elb" {
         instance_protocol         = "http"
         lb_port                   = 443
         lb_protocol               = "https"
-        ssl_certificate_id        = "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/1af91a2d-8fa2-4726-abbd-f321b7a136c3"
+        ssl_certificate_id        = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
     }
 
     health_check {
