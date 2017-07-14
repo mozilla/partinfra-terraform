@@ -46,6 +46,10 @@ resource "aws_s3_bucket" "equalrating-archive-bucket" {
     bucket = "challenge.equalrating.com"
     acl = "public-read"
 
+    website {
+      index_document = "index.html"
+    }
+
     tags = {
         Name = "challenge.equalrating.com"
         project = "equalrating"
