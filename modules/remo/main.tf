@@ -5,8 +5,8 @@ variable "service_security_group_id" {}
 variable "environment" {}
 
 resource "aws_security_group" "remo-redis-sg" {
-    name                     = "remo-redis-shared-sg"
-    description              = "remo elasticache SG"
+    name                     = "remo-redis-${var.environment}-sg"
+    description              = "remo ${var.environment} elasticache SG"
     vpc_id                   = "${var.vpc_id}"
 }
 
