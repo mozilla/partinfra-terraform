@@ -7,8 +7,8 @@ variable "fqdn" {}
 variable "ssl_certificate" {}
 
 resource "aws_security_group" "discourse-redis-sg" {
-    name                     = "discourse-redis-shared-sg"
-    description              = "discourse elasticache SG"
+    name                     = "discourse-redis-${var.environment}-sg"
+    description              = "discourse ${var.environment} elasticache SG"
     vpc_id                   = "${var.vpc_id}"
 }
 
