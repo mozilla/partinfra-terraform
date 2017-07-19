@@ -44,6 +44,10 @@ resource "aws_elasticsearch_domain" "infra-logs-es" {
         app = "elasticsearch"
         env = "shared"
     }
+
+    lifecycle {
+      ignore_changes                    = ["access_policies"]
+    }
 }
 
 # CloudFormation stack for infosec CloudTrail storage

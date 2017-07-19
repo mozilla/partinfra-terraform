@@ -347,4 +347,8 @@ resource "aws_elasticsearch_domain" "bitergia-rust-metrics-es" {
       env                             = "production"
       project                         = "metrics"
     }
+
+    lifecycle {
+      ignore_changes                    = ["access_policies"]
+    }
 }
