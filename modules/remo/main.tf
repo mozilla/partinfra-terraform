@@ -3,10 +3,12 @@ variable "remo_elasticache_instance_size" {}
 variable "elasticache_subnet_group" {}
 variable "service_security_group_id" {}
 variable "environment" {}
+variable "elasticache_sg_name" {}
+variable "elasticache_sg_description" {}
 
 resource "aws_security_group" "remo-redis-sg" {
-    name                     = "remo-redis-${var.environment}-sg"
-    description              = "remo ${var.environment} elasticache SG"
+    name                     = "${var.elasticache_sg_name}"
+    description              = "${var.elasticache_sg_description}"
     vpc_id                   = "${var.vpc_id}"
 }
 
