@@ -18,6 +18,6 @@ module "discourse-staging" {
     discourse_elasticache_instance_size = "cache.t2.micro"
     service_security_group_id           = "${module.mesos-cluster-production.mesos-cluster-slave-sg-id}"
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
-    fqdn                                = "discourse.staging.paas.mozilla.community"
+    fqdn                                = "discourse-staging.production.paas.mozilla.community"
     ssl_certificate                     = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
 }
