@@ -5,6 +5,9 @@ variable "elasticache_redis_instance_size" {}
 variable "elasticache_memcached_instance_size" {}
 variable "elasticache_subnet_group" {}
 variable "elasticsearch_arn" {}
+variable "cdn_origin_domain_name" {}
+variable "cdn_alias" {}
+variable "ssl_certificate" {}
 
 resource "aws_security_group" "mozillians-redis-sg" {
     name                     = "mozillians-redis-${var.environment}-sg"
@@ -85,4 +88,14 @@ resource "aws_elasticache_cluster" "mozillians-memcached-ec" {
         env                    = "${var.environment}"
         project                = "mozillians"
     }
+}
+
+module "media-cdn" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+
+  origin_domain_name  = "${var.cdn_origin_domain_name}"
+  origin_path         = ""
+  origin_id           = "mozillians-${var.environment}"
+  alias               = "${var.cdn_alias}"
+  acm_certificate_arn = "${var.ssl_certificate}"
 }
