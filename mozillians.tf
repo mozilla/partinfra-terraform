@@ -135,6 +135,9 @@ module "mozillians-staging" {
     service_security_group_id           = "${module.mesos-cluster-production.mesos-cluster-slave-sg-id}"
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
     elasticsearch_arn                   = "${aws_elasticsearch_domain.mozillians-es.arn}"
+    cdn_alias                           = "media-staging.mozillians.org"
+    cdn_origin_domain_name              = "media-mozillians-staging.production.paas.mozilla.community"
+    ssl_certificate                     = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
 }
 
 module "mozillians-production" {
@@ -147,6 +150,9 @@ module "mozillians-production" {
     service_security_group_id           = "${aws_security_group.mozillians-slave-ec2-sg.id}"
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
     elasticsearch_arn                   = "${aws_elasticsearch_domain.mozillians-es.arn}"
+    cdn_alias		             	= "media.mozillians.org"
+    cdn_origin_domain_name		= "media-mozillians.production.paas.mozilla.community"
+    ssl_certificate                     = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
 }
 
 resource "aws_elasticsearch_domain" "mozillians-es" {
