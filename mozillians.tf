@@ -51,6 +51,39 @@ data "aws_iam_policy_document" "mozillians-production-assume-role-policy" {
     }
 }
 
+data "aws_iam_policy_document" "mozillians-staging-assume-role-policy" {
+
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        principals {
+            type = "AWS"
+            identifiers = [
+                # Temporarily allow Andrew to assume this role
+                "arn:aws:iam::371522382791:user/akrug"
+            ]
+        }
+    }
+}
+
+resource "aws_iam_role" "mozillians-staging-role" {
+    name = "mozillians-staging-role"
+    assume_role_policy = "${data.aws_iam_policy_document.mozillians-staging-assume-role-policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "mozillians-staging-mozdef-policy" {
+    role = "${aws_iam_role.mozillians-staging-role.name}"
+    policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "mozillians-staging-access-policy" {
+    role = "${aws_iam_role.mozillians-staging-role.name}"
+    policy_arn = "${module.mozillians-staging.aws-access-policy-arn}"
+}
+
 resource "aws_iam_role" "mozillians-production-role" {
     name = "mozillians-production-role"
     assume_role_policy = "${data.aws_iam_policy_document.mozillians-production-assume-role-policy.json}"
