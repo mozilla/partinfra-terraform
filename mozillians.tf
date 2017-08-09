@@ -49,6 +49,21 @@ data "aws_iam_policy_document" "mozillians-production-assume-role-policy" {
             ]
         }
     }
+
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        principals {
+            type = "AWS"
+            identifiers = [
+                # Temporarily allow Andrew to assume this role
+                "arn:aws:iam::371522382791:user/akrug"
+            ]
+        }
+    }
 }
 
 data "aws_iam_policy_document" "mozillians-staging-assume-role-policy" {
