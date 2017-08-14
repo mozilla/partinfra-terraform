@@ -99,7 +99,7 @@ resource "aws_cloudfront_distribution" "media-static-cdn" {
   origin {
     domain_name = "${var.cdn_media_origin_domain_name}"
     origin_id   = "mozillians-${var.environment}-media-origin"
-    origin_path = "/media"
+    origin_path = ""
     custom_origin_config {
       http_port = "80"
       https_port = "443"
@@ -131,7 +131,7 @@ resource "aws_cloudfront_distribution" "media-static-cdn" {
   origin {
     domain_name = "${var.cdn_static_origin_domain_name}"
     origin_id   = "mozillians-${var.environment}-static-origin"
-    origin_path = "/static"
+    origin_path = ""
     custom_origin_config {
       http_port = "80"
       https_port = "443"
