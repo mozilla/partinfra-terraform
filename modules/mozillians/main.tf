@@ -5,9 +5,13 @@ variable "elasticache_redis_instance_size" {}
 variable "elasticache_memcached_instance_size" {}
 variable "elasticache_subnet_group" {}
 variable "elasticsearch_arn" {}
-variable "cdn_origin_domain_name" {}
+variable "cdn_media_origin_domain_name" {}
+variable "cdn_static_origin_domain_name" {}
 variable "cdn_alias" {}
-variable "ssl_certificate" {}
+variable "cdn_compression" {
+    default = true
+}
+variable "cdn_ssl_certificate" {}
 
 resource "aws_security_group" "mozillians-redis-sg" {
     name                     = "mozillians-redis-${var.environment}-sg"
@@ -90,12 +94,107 @@ resource "aws_elasticache_cluster" "mozillians-memcached-ec" {
     }
 }
 
-module "media-cdn" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+resource "aws_cloudfront_distribution" "media-static-cdn" {
+  origin {
+    domain_name = "${var.cdn_media_origin_domain_name}"
+    origin_id   = "mozillians-${var.environment}-media-origin"
+    origin_path = "/media"
+    custom_origin_config {
+      http_port = "80"
+      https_port = "443"
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+    }
+  }
 
-  origin_domain_name  = "${var.cdn_origin_domain_name}"
-  origin_path         = ""
-  origin_id           = "mozillians-${var.environment}"
-  alias               = "${var.cdn_alias}"
-  acm_certificate_arn = "${var.ssl_certificate}"
+  cache_behavior {
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    path_pattern     = "media/*"
+    target_origin_id = "mozillians-${var.environment}-media-origin"
+    compress         = "${var.cdn_compression}"
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 360
+    max_ttl                = 3600
+  }
+
+  origin {
+    domain_name = "${var.cdn_static_origin_domain_name}"
+    origin_id   = "mozillians-${var.environment}-static-origin"
+    origin_path = "/static"
+    custom_origin_config {
+      http_port = "80"
+      https_port = "443"
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+    }
+  }
+
+  cache_behavior {
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    path_pattern     = "static/*"
+    target_origin_id = "mozillians-${var.environment}-static-origin"
+    compress         = "${var.cdn_compression}"
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 360
+    max_ttl                = 3600
+  }
+
+  enabled             = true
+  comment             = "Mozillians ${var.environment} CDN"
+  default_root_object = "index.html"
+
+  aliases = ["${var.cdn_alias}"]
+  price_class = "PriceClass_200"
+
+  default_cache_behavior {
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "mozillians-${var.environment}-static-origin"
+    compress         = "${var.cdn_compression}"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 360
+    max_ttl                = 3600
+  }
+
+  restrictions {
+    geo_restriction {
+        restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn = "${var.cdn_ssl_certificate}"
+    ssl_support_method = "sni-only"
+    minimum_protocol_version = "TLSv1"
+  }
 }
