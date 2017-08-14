@@ -12,6 +12,7 @@ variable "cdn_compression" {
     default = true
 }
 variable "cdn_ssl_certificate" {}
+variable "cis_publisher_role_arn" {}
 
 resource "aws_security_group" "mozillians-redis-sg" {
     name                     = "mozillians-redis-${var.environment}-sg"

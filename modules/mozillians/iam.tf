@@ -45,6 +45,17 @@ data "aws_iam_policy_document" "mozillians-bucket-policy" {
             "${aws_s3_bucket.exports-bucket.arn}"
         ]
     }
+
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole"
+        ]
+
+        resources = [
+            "${var.cis_publisher_role_arn}"
+        ]
+    }
 }
 
 # Note: This only creates the IAM policy, it needs to be attached to a user or role
