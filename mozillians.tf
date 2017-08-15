@@ -187,6 +187,7 @@ module "mozillians-staging" {
     cdn_media_origin_domain_name        = "media-mozillians-staging.production.paas.mozilla.community"
     cdn_static_origin_domain_name       = "web-mozillians-staging.production.paas.mozilla.community"
     cdn_ssl_certificate                 = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
+    cis_publisher_role_arn              = "arn:aws:iam::656532927350:role/CISPublisherRole"
 }
 
 module "mozillians-production" {
@@ -203,6 +204,7 @@ module "mozillians-production" {
     cdn_media_origin_domain_name        = "media-mozillians.production.paas.mozilla.community"
     cdn_static_origin_domain_name       = "mozillians.org"
     cdn_ssl_certificate                 = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
+    cis_publisher_role_arn              = "arn:aws:iam::371522382791:role/CISPublisherRole"
 }
 
 resource "aws_elasticsearch_domain" "mozillians-es" {
