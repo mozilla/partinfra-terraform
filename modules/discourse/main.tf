@@ -5,6 +5,8 @@ variable "service_security_group_id" {}
 variable "environment" {}
 variable "fqdn" {}
 variable "ssl_certificate" {}
+variable "discourse_api_key" {}
+variable "lambda-functions-bucket" {}
 
 resource "aws_security_group" "discourse-redis-sg" {
     name                     = "discourse-redis-${var.environment}-sg"
