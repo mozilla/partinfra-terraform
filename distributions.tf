@@ -67,3 +67,14 @@ module "challenge-equalrating-com" {
   comment             = "parsys/issues/196"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
 }
+
+module "firefoxsprint-mozilla-community" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+
+  origin_domain_name  = "mozilla.github.io"
+  origin_path         = "/firefox57-sprint"
+  origin_id           = "gh-pages-firefoxsprint-mozilla-community"
+  alias               = "firefoxsprint.mozilla.community"
+  comment             = "github.com/mozilla/parsys/issues/226"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+}
