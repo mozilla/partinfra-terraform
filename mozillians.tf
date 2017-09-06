@@ -34,12 +34,11 @@ resource "aws_security_group_rule" "mozillians-slave-ec2-sg-allowallfromshared" 
     security_group_id = "${aws_security_group.mozillians-slave-ec2-sg.id}"
 }
 
-data "aws_iam_policy_document" "mozillians-production-assume-role-policy" {
-
+data "aws_iam_policy_document" "mozillians-host-assume-role-policy" {
     statement {
         effect = "Allow"
         actions = [
-            "sts:AssumeRole",
+            "sts:AssumeRole"
         ]
 
         principals {
@@ -49,74 +48,43 @@ data "aws_iam_policy_document" "mozillians-production-assume-role-policy" {
             ]
         }
     }
+}
 
+
+data "aws_iam_policy_document" "mozillians-production-host-policy-document" {
     statement {
         effect = "Allow"
         actions = [
             "sts:AssumeRole",
+            "iam:GetRole"
         ]
 
-        principals {
-            type = "AWS"
-            identifiers = [
-                # Temporarily allow Andrew to assume this role
-                "arn:aws:iam::371522382791:user/akrug"
-            ]
-        }
+        resources = [
+            "${module.mozillians-production.container-role-arn}",
+            "${aws_iam_role.mozdef-logs-role.arn}"
+        ]
     }
 }
 
-data "aws_iam_policy_document" "mozillians-staging-assume-role-policy" {
+resource "aws_iam_role" "mozillians-host-role" {
+    name = "mozillians-host-role"
+    assume_role_policy = "${data.aws_iam_policy_document.mozillians-host-assume-role-policy.json}"
 
-    statement {
-        effect = "Allow"
-        actions = [
-            "sts:AssumeRole",
-        ]
-
-        principals {
-            type = "AWS"
-            identifiers = [
-                # Temporarily allow Andrew to assume this role
-                "arn:aws:iam::371522382791:user/akrug"
-            ]
-        }
+    lifecycle {
+        create_before_destroy = true
     }
 }
 
-resource "aws_iam_role" "mozillians-staging-role" {
-    name = "mozillians-staging-role"
-    assume_role_policy = "${data.aws_iam_policy_document.mozillians-staging-assume-role-policy.json}"
+resource "aws_iam_role_policy" "mozillians-host-role-policy" {
+    name   = "mozillians-host-role-policy"
+    role   = "${aws_iam_role.mozillians-host-role.name}"
+    policy = "${data.aws_iam_policy_document.mozillians-production-host-policy-document.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "mozillians-staging-mozdef-policy" {
-    role = "${aws_iam_role.mozillians-staging-role.name}"
-    policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "mozillians-staging-access-policy" {
-    role = "${aws_iam_role.mozillians-staging-role.name}"
-    policy_arn = "${module.mozillians-staging.aws-access-policy-arn}"
-}
-
-resource "aws_iam_role" "mozillians-production-role" {
-    name = "mozillians-production-role"
-    assume_role_policy = "${data.aws_iam_policy_document.mozillians-production-assume-role-policy.json}"
-}
-
-resource "aws_iam_role_policy_attachment" "mozillians-production-mozdef-policy" {
-    role = "${aws_iam_role.mozillians-production-role.name}"
-    policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "mozillians-production-access-policy" {
-    role = "${aws_iam_role.mozillians-production-role.name}"
-    policy_arn = "${module.mozillians-production.aws-access-policy-arn}"
-}
 
 resource "aws_iam_instance_profile" "mozillians-production-profile" {
     name = "mozillians-production-profile"
-    roles = ["${aws_iam_role.mozillians-production-role.name}"]
+    roles = ["${aws_iam_role.mozillians-host-role.name}"]
 }
 
 resource "aws_launch_configuration" "mozillians-slave-ec2-lc" {
@@ -188,6 +156,7 @@ module "mozillians-staging" {
     cdn_static_origin_domain_name       = "web-mozillians-staging.production.paas.mozilla.community"
     cdn_ssl_certificate                 = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
     cis_publisher_role_arn              = "arn:aws:iam::656532927350:role/CISPublisherRole"
+    iam-assume-role-policy              = "${data.aws_iam_policy_document.containers-assume-role-policy.json}"
 }
 
 module "mozillians-production" {
@@ -205,6 +174,7 @@ module "mozillians-production" {
     cdn_static_origin_domain_name       = "mozillians.org"
     cdn_ssl_certificate                 = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
     cis_publisher_role_arn              = "arn:aws:iam::371522382791:role/CISPublisherRole"
+    iam-assume-role-policy              = "${data.aws_iam_policy_document.containers-assume-role-policy.json}"
 }
 
 resource "aws_elasticsearch_domain" "mozillians-es" {

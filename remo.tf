@@ -8,6 +8,7 @@ module "remo-staging" {
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
     elasticache_sg_name                 = "remo-redis-staging-sg"
     elasticache_sg_description          = "remo staging elasticache SG"
+    iam-assume-role-policy              = "${data.aws_iam_policy_document.containers-assume-role-policy.json}"
 }
 
 module "remo-production" {
@@ -20,4 +21,5 @@ module "remo-production" {
     elasticache_subnet_group            = "${aws_elasticache_subnet_group.elasticache-production-subnet-group.name}"
     elasticache_sg_name                 = "remo-redis-shared-sg"
     elasticache_sg_description          = "remo elasticache SG"
+    iam-assume-role-policy              = "${data.aws_iam_policy_document.containers-assume-role-policy.json}"
 }

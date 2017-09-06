@@ -1,4 +1,6 @@
-data "aws_iam_policy_document" "mozillians-bucket-policy" {
+variable "iam-assume-role-policy" {}
+
+data "aws_iam_policy_document" "policy-document" {
     statement {
         effect = "Allow"
         actions = [
@@ -58,14 +60,21 @@ data "aws_iam_policy_document" "mozillians-bucket-policy" {
     }
 }
 
-# Note: This only creates the IAM policy, it needs to be attached to a user or role
-resource "aws_iam_policy" "aws-access-policy" {
-  name        = "mozillians-${var.environment}-s3-ses-es"
-  path        = "/"
-  description = "Mozillians ${var.environment} IAM policy for S3/SES/ES"
-  policy = "${data.aws_iam_policy_document.mozillians-bucket-policy.json}"
+resource "aws_iam_role" "container-role" {
+    name = "mozillians-${var.environment}-role"
+    assume_role_policy = "${var.iam-assume-role-policy}"
+}
+
+resource "aws_iam_role_policy" "iam-role-policy" {
+    name   = "mozillians-${var.environment}-role-policy"
+    role   = "${aws_iam_role.container-role.name}"
+    policy = "${data.aws_iam_policy_document.policy-document.json}"
 }
 
 output "aws-access-policy-arn" {
-  value = "${aws_iam_policy.aws-access-policy.arn}"
+  value = "${aws_iam_role_policy.iam-role-policy.arn}"
+}
+
+output "container-role-arn" {
+  value = "${aws_iam_role.container-role.arn}"
 }
