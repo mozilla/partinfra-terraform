@@ -14,7 +14,7 @@ variable "slave_as_min_size" {}
 variable "master_as_max_size" {}
 variable "master_as_desired_capacity" {}
 variable "master_as_min_size" {}
-variable "mozillians-slave-ec2-sg-id" { 
+variable "mozillians-slave-ec2-sg-id" {
     default = ""
 }
 
@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "mesos-assume-role-policy" {
     statement {
         effect = "Allow"
         actions = [
-            "sts:AssumeRole",
+            "sts:AssumeRole"
         ]
 
         principals {
@@ -35,20 +35,31 @@ data "aws_iam_policy_document" "mesos-assume-role-policy" {
     }
 }
 
-resource "aws_iam_role" "mesos-role" {
-    name = "mesos-${var.environment}-role"
+resource "aws_iam_role" "mesos-master-host-role" {
+    name = "mesos-master-${var.environment}-host-role"
     assume_role_policy = "${data.aws_iam_policy_document.mesos-assume-role-policy.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "mesos-access-policy" {
-    role = "${aws_iam_role.mesos-role.name}"
+resource "aws_iam_role" "mesos-slave-host-role" {
+    name = "mesos-slave-${var.environment}-host-role"
+    assume_role_policy = "${data.aws_iam_policy_document.mesos-assume-role-policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "mesos-master-host-mozdef-policy" {
+    role = "${aws_iam_role.mesos-master-host-role.name}"
     policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
 }
 
-resource "aws_iam_instance_profile" "mesos-profile" {
-    name = "mesos-${var.environment}-profile"
-    roles = ["${aws_iam_role.mesos-role.name}"]
+resource "aws_iam_instance_profile" "mesos-master-profile" {
+    name = "mesos-master-${var.environment}-profile"
+    roles = ["${aws_iam_role.mesos-master-host-role.name}"]
 }
+
+resource "aws_iam_instance_profile" "mesos-slave-profile" {
+    name = "mesos-slave-${var.environment}-profile"
+    roles = ["${aws_iam_role.mesos-slave-host-role.name}"]
+}
+
 
 resource "aws_elb" "mesos-elb" {
   name                        = "mesos-${var.environment}-elb"
@@ -103,7 +114,7 @@ resource "aws_launch_configuration" "mesos-master-ec2-lc" {
   instance_type               = "${var.master_instance_type}"
   key_name                    = "ansible"
   security_groups             = ["${aws_security_group.mesos-master-ec2-sg.id}"]
-  iam_instance_profile        = "${aws_iam_instance_profile.mesos-profile.name}"
+  iam_instance_profile        = "${aws_iam_instance_profile.mesos-master-profile.name}"
   associate_public_ip_address = true
   root_block_device {
     volume_size               = 100
@@ -119,7 +130,7 @@ resource "aws_launch_configuration" "mesos-slave-ec2-lc" {
   instance_type               = "${var.slave_instance_type}"
   key_name                    = "ansible"
   security_groups             = ["${aws_security_group.mesos-slave-ec2-sg.id}"]
-  iam_instance_profile        = "${aws_iam_instance_profile.mesos-profile.name}"
+  iam_instance_profile        = "${aws_iam_instance_profile.mesos-slave-profile.name}"
   associate_public_ip_address = true
   root_block_device {
     volume_size               = 100
