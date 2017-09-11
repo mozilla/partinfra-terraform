@@ -35,7 +35,7 @@ resource "aws_iam_role" "mesos-slave-host-role" {
 
 resource "aws_iam_role_policy_attachment" "mesos-master-host-mozdef-policy" {
     role = "${aws_iam_role.mesos-master-host-role.name}"
-    policy_arn = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
+    policy_arn = "${lookup(var.unmanaged_role_arns, "mozdef-logging")}"
 }
 
 resource "aws_iam_instance_profile" "mesos-master-profile" {

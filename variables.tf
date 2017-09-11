@@ -51,3 +51,10 @@ variable "unmanaged_role_ids" {
         InfosecSecurityAuditRole = "AROAJHELZZZIXWALL3AVS"
     }
 }
+
+variable "unmanaged_role_arns" {
+    type = "map"
+    default = {
+        mozdef-logging = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
+    }
+}
