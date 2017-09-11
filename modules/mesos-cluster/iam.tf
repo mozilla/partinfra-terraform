@@ -48,6 +48,6 @@ resource "aws_iam_instance_profile" "mesos-slave-profile" {
     roles = ["${aws_iam_role.mesos-slave-host-role.name}"]
 }
 
-output "slave-host-role-arn" {
-  value = "${aws_iam_role.mesos-slave-host-role.arn}"
+output "slave-host-role-name" {
+  value = "${aws_iam_role.mesos-slave-host-role.name}"
 }
