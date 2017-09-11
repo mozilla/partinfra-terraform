@@ -72,6 +72,6 @@ module "mesos-cluster-production" {
 
 resource "aws_iam_role_policy" "mesos-slave-production-host-role-policy" {
     name   = "mesos-slave-host-role-policy"
-    role   = "${module.mesos-cluster-production.slave-host-role-arn}"
+    role   = "${module.mesos-cluster-production.slave-host-role-name}"
     policy = "${data.aws_iam_policy_document.mesos-slave-production-host-policy-document.json}"
 }
