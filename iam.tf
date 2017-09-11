@@ -9,6 +9,30 @@ variable "community-ops-buckets" {
     ]
 }
 
+data "aws_iam_policy_document" "containers-assume-role-policy" {
+
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole",
+        ]
+
+        principals {
+            type = "AWS"
+            identifiers = [
+                "arn:aws:iam::${var.aws_account_id}:root"
+            ]
+        }
+
+        principals {
+            type = "Service"
+            identifiers = [
+                "ec2.amazonaws.com"
+            ]
+        }
+    }
+}
+
 data "aws_iam_policy_document" "admin-access-assume-role-policy" {
 
     statement {
@@ -359,4 +383,15 @@ resource "aws_iam_role_policy_attachment" "community-ops-elevated-CloudFrontRead
 resource "aws_iam_role_policy_attachment" "community-ops-elevated-CloudWatchReadOnlyAccess" {
     role       = "${aws_iam_role.community-ops-elevated-role.name}"
     policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
+}
+
+# IAM role for Mozdef logging
+resource "aws_iam_role" "mozdef-logs-role" {
+    name = "mozdef-logs-role"
+    assume_role_policy = "${data.aws_iam_policy_document.containers-assume-role-policy.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "mozdef-sns-policy" {
+    role = "${aws_iam_role.mozdef-logs-role.name}"
+    policy_arn = "${lookup(var.unmanaged_role_arns, "mozdef-logging")}"
 }

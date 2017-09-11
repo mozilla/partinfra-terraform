@@ -1,4 +1,24 @@
-# mesos-cluster staging
+data "aws_iam_policy_document" "mesos-slave-production-host-policy-document" {
+    statement {
+        effect = "Allow"
+        actions = [
+            "sts:AssumeRole",
+            "iam:GetRole"
+        ]
+
+        resources = [
+            "${module.discourse-staging.container-role-arn}",
+            "${module.discourse-production.container-role-arn}",
+            "${module.mozillians-staging.container-role-arn}",
+            "${module.remo-staging.container-role-arn}",
+            "${module.remo-production.container-role-arn}",
+            "${module.coss-staging.container-role-arn}",
+            "${module.coss-production.container-role-arn}",
+            "${aws_iam_role.mozdef-logs-role.arn}"
+        ]
+    }
+}
+
 module "mesos-cluster-staging" {
     source               = "./modules/mesos-cluster"
     # provider vars
@@ -48,4 +68,10 @@ module "mesos-cluster-production" {
     aws_account_id       = "${var.aws_account_id}"
     adminaccessrole-uid  = "${aws_iam_role.admin-access-role.unique_id}"
     mozillians-slave-ec2-sg-id = "${aws_security_group.mozillians-slave-ec2-sg.id}"
+}
+
+resource "aws_iam_role_policy" "mesos-slave-production-host-role-policy" {
+    name   = "mesos-slave-host-role-policy"
+    role   = "${module.mesos-cluster-production.slave-host-role-arn}"
+    policy = "${data.aws_iam_policy_document.mesos-slave-production-host-policy-document.json}"
 }
