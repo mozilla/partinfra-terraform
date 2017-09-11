@@ -35,7 +35,7 @@ module "mozillaindia-org" {
   source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
 
   origin_domain_name  = "mozillaindia.github.io"
-  origin_path         = "/"
+  origin_path         = ""
   origin_id           = "gh-pages-mozillaindia-github-io"
   alias               = "mozillaindia.org"
   comment             = "Bug 1344680"
