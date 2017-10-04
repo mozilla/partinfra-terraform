@@ -10,6 +10,7 @@ variable "aws_amis" {
     admin-node-2016-07-15 = "ami-68d8557f"
     debian-jessie-8-4 = "ami-45374b25"
     us-east-1-ubuntu-16-04 = "ami-80861296"
+    jenkins-2017-10-04 = "ami-9f1bdee5"
   }
 }
 
