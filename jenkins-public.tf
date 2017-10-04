@@ -119,8 +119,8 @@ resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowallegress" {
 }
 
 resource "aws_instance" "jenkins-public-ec2" {
-    ami                     = "${lookup(var.aws_amis, var.aws_region)}"
-    instance_type           = "t2.micro"
+    ami                     = "${lookup(var.aws_amis, "jenkins-2017-10-04")}"
+    instance_type           = "t2.medium"
     disable_api_termination = true
     key_name                = "ansible"
     vpc_security_group_ids  = ["${aws_security_group.jenkins-public-ec2-sg.id}"]
@@ -128,8 +128,8 @@ resource "aws_instance" "jenkins-public-ec2" {
     subnet_id               = "${aws_subnet.apps-shared-1c.id}"
 
     root_block_device {
-        volume_type = "standard"
-        volume_size = 20
+        volume_type = "gp2"
+        volume_size = 100
     }
 
     tags {
