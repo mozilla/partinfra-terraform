@@ -5,6 +5,7 @@ data "aws_iam_policy_document" "policy-document" {
         effect  = "Allow"
         actions = [
             "ses:SendRawEmail",
+            "ses:GetSendQuota"
         ]
 
         resources = [
