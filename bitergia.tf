@@ -213,29 +213,6 @@ resource "aws_security_group_rule" "bitergia-ec2-sg-allowall" {
     security_group_id        = "${aws_security_group.bitergia-ec2-sg.id}"
 }
 
-resource "aws_instance" "bitergia-ec2" {
-    provider                 = "aws.us-west-1"
-    ami                      = "${lookup(var.aws_amis, "debian-jessie-8-4")}"
-    instance_type            = "r3.2xlarge"
-    disable_api_termination  = false
-    key_name                 = "bitergia"
-    vpc_security_group_ids   = ["${aws_security_group.bitergia-ec2-sg.id}"]
-    subnet_id                = "${aws_subnet.bitergia-metrics-public-subnet.id}"
-
-    root_block_device {
-      volume_type            = "standard"
-      volume_size            = 500
-    }
-
-    tags {
-        Name                 = "bitergia"
-        app                  = "bitergia"
-        env                  = "production"
-        project              = "metrics"
-    }
-}
-
-
 resource "aws_instance" "bitergia-ec2-new" {
     provider                 = "aws.us-west-1"
     ami                      = "${lookup(var.aws_amis, "bitergia-2017-10-16")}"
@@ -246,8 +223,8 @@ resource "aws_instance" "bitergia-ec2-new" {
     subnet_id                = "${aws_subnet.bitergia-metrics-public-subnet.id}"
 
     root_block_device {
-      volume_type            = "standard"
-      volume_size            = 500
+      volume_type            = "gp2"
+      volume_size            = 1000
     }
 
     tags {
@@ -302,7 +279,7 @@ resource "aws_elb" "bitergia-elb" {
   name                        = "bitergia-elb"
   security_groups             = ["${aws_security_group.bitergia-elb-sg.id}"]
   subnets                     = ["${aws_subnet.bitergia-metrics-public-subnet.id}"]
-  instances                   = ["${aws_instance.bitergia-ec2.id}", "${aws_instance.bitergia-ec2-new.id}"]
+  instances                   = ["${aws_instance.bitergia-ec2-new.id}"]
 
   listener {
     instance_port             = 443
