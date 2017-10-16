@@ -119,7 +119,7 @@ resource "aws_security_group_rule" "jenkins-public-ec2-sg-allowallegress" {
 }
 
 resource "aws_instance" "jenkins-public-ec2" {
-    ami                     = "${lookup(var.aws_amis, "jenkins-2017-10-04")}"
+    ami                     = "${lookup(var.aws_amis, var.aws_region)}"
     instance_type           = "t2.medium"
     disable_api_termination = true
     key_name                = "ansible"
@@ -174,7 +174,7 @@ resource "aws_elb" "jenkins-public-elb" {
     internal                    = false
 
     listener {
-        instance_port             = 8080
+        instance_port             = 8081
         instance_protocol         = "http"
         lb_port                   = 443
         lb_protocol               = "https"
