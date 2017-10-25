@@ -12,8 +12,7 @@ variable "rust-metrics-es-iam-policy" {
         "Condition": {
           "IpAddress": {
             "aws:SourceIp": [
-              "54.67.69.59",
-              "10.0.27.67"
+              "13.57.24.109"
             ]
           }
         }
@@ -343,6 +342,42 @@ resource "aws_elasticsearch_domain" "bitergia-rust-metrics-es" {
 
     tags {
       Domain                          = "bitergia-rust-metrics-es"
+      app                             = "elasticsearch"
+      env                             = "production"
+      project                         = "metrics"
+    }
+
+    lifecycle {
+      ignore_changes                    = ["access_policies"]
+    }
+}
+
+resource "aws_elasticsearch_domain" "bitergia-metrics-es" {
+    provider                          = "aws.us-west-1"
+    domain_name                       = "bitergia-metrics-es"
+    elasticsearch_version             = "5.1"
+
+    access_policies                   = "${var.rust-metrics-es-iam-policy}"
+
+    ebs_options {
+        ebs_enabled                   = true
+        volume_type                   = "gp2"
+        volume_size                   = 300
+    }
+
+    cluster_config {
+        instance_count                = 3
+        instance_type                 = "m4.xlarge.elasticsearch"
+        dedicated_master_enabled      = false
+        zone_awareness_enabled        = false
+    }
+
+    snapshot_options {
+        automated_snapshot_start_hour = 23
+    }
+
+    tags {
+      Domain                          = "bitergia-metrics-es"
       app                             = "elasticsearch"
       env                             = "production"
       project                         = "metrics"
