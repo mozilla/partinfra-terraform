@@ -78,3 +78,14 @@ module "firefoxsprint-mozilla-community" {
   comment             = "github.com/mozilla/parsys/issues/226"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
 }
+
+module "newfirefox-mozilla-community" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+
+  origin_domain_name  = "mozilla.github.io"
+  origin_path         = "/newfirefox.mozilla.community"
+  origin_id           = "gh-pages-newfirefox-mozilla-community"
+  alias               = "newfirefox.mozilla.community"
+  comment             = "github.com/mozilla/parsys/issues/241"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+}
