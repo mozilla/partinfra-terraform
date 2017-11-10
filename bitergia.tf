@@ -173,9 +173,8 @@ resource "aws_db_instance" "bitergia-production-db" {
   username                   = "root"
   password                   = "${var.bitergia-db_password}"
   vpc_security_group_ids     = ["${aws_security_group.bitergia-rds-sg.id}"]
-#  db_subnet_group_name       = "${aws_db_subnet_group.bitergia-rds-subnetgroup.name}"
-  db_subnet_group_name       = "default.mariadb10.0"
-  parameter_group_name       = "${aws_db_parameter_group.bitergia-production-params.id}"
+  db_subnet_group_name       = "${aws_db_subnet_group.bitergia-rds-subnetgroup.name}"
+  parameter_group_name       = "default.mariadb10.0"
   tags {
       Name                   = "bitergia-production-db"
       app                    = "mysql"
