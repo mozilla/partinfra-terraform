@@ -184,6 +184,7 @@ resource "aws_db_instance" "bitergia-production-db" {
 }
 
 resource "aws_db_parameter_group" "bitergia-production-params" {
+  provider = "aws.us-west-1"
   name   = "bitergia-mariadb10"
   family = "mariadb10.0"
 
