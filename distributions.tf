@@ -1,5 +1,5 @@
 module "activate-mozilla-community" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
   origin_domain_name  = "mozilla.github.io"
   origin_path         = "/activate.mozilla.community"
@@ -7,10 +7,17 @@ module "activate-mozilla-community" {
   alias               = "activate.mozilla.community"
   comment             = "Bug 1287738"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
 }
 
 module "campus-mozilla-community" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
   origin_domain_name  = "mozilla.github.io"
   origin_path         = "/mozilla-campus-clubs"
@@ -18,10 +25,17 @@ module "campus-mozilla-community" {
   alias               = "campus.mozilla.community"
   comment             = "Bug 1301082"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
 }
 
 module "badges-mozilla-org" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
   origin_domain_name  = "s3.amazonaws.com"
   origin_path         = "/badges.mozilla.org"
@@ -29,10 +43,17 @@ module "badges-mozilla-org" {
   alias               = "badges.mozilla.org"
   comment             = "Bug 1230266"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mozilla-org-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
 }
 
 module "mozillaindia-org" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
   origin_domain_name  = "mozillaindia.github.io"
   origin_path         = ""
@@ -40,6 +61,13 @@ module "mozillaindia-org" {
   alias               = "mozillaindia.org"
   comment             = "Bug 1344680"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
 }
 
 resource "aws_s3_bucket" "equalrating-archive-bucket" {
@@ -58,7 +86,7 @@ resource "aws_s3_bucket" "equalrating-archive-bucket" {
 
 
 module "challenge-equalrating-com" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
   origin_domain_name  = "s3.amazonaws.com"
   origin_path         = "/challenge.equalrating.com"
@@ -66,10 +94,17 @@ module "challenge-equalrating-com" {
   alias               = "challenge.equalrating.com"
   comment             = "parsys/issues/196"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
 }
 
 module "firefoxsprint-mozilla-community" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
   origin_domain_name  = "mozilla.github.io"
   origin_path         = "/firefox57-sprint"
@@ -77,10 +112,17 @@ module "firefoxsprint-mozilla-community" {
   alias               = "firefoxsprint.mozilla.community"
   comment             = "github.com/mozilla/parsys/issues/226"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
 }
 
 module "newfirefox-mozilla-community" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git"
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
   origin_domain_name  = "mozilla.github.io"
   origin_path         = "/newfirefox.mozilla.community"
@@ -88,4 +130,11 @@ module "newfirefox-mozilla-community" {
   alias               = "newfirefox.mozilla.community"
   comment             = "github.com/mozilla/parsys/issues/241"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
 }
