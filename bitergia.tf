@@ -298,15 +298,15 @@ resource "aws_elb" "bitergia-elb" {
   instances                   = ["${aws_instance.bitergia-ec2-new.id}"]
 
   listener {
-    instance_port             = 443
-    instance_protocol         = "https"
+    instance_port             = 8080
+    instance_protocol         = "http"
     lb_port                   = 80
     lb_protocol               = "http"
   }
 
   listener {
-    instance_port             = 443
-    instance_protocol         = "https"
+    instance_port             = 8080
+    instance_protocol         = "http"
     lb_port                   = 443
     lb_protocol               = "https"
     ssl_certificate_id        = "${lookup(var.ssl_certificates, "analytics-us-west-1")}"
