@@ -53,7 +53,7 @@ resource "aws_s3_bucket" "discourse-content" {
     acl = "private"
 
     lifecycle_rule {
-        id = "purge-tombstone"
+        id = "purge_tombstone"
         prefix = "tombstone/"
         enabled = true
         expiration {
