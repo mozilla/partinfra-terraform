@@ -184,6 +184,7 @@ resource "aws_db_instance" "bitergia-production-db" {
 }
 
 resource "aws_db_parameter_group" "bitergia-production-params" {
+  provider = "aws.us-west-1"
   name   = "bitergia-mariadb10"
   family = "mariadb10.0"
 
@@ -297,15 +298,15 @@ resource "aws_elb" "bitergia-elb" {
   instances                   = ["${aws_instance.bitergia-ec2-new.id}"]
 
   listener {
-    instance_port             = 443
-    instance_protocol         = "https"
+    instance_port             = 8080
+    instance_protocol         = "http"
     lb_port                   = 80
     lb_protocol               = "http"
   }
 
   listener {
-    instance_port             = 443
-    instance_protocol         = "https"
+    instance_port             = 8080
+    instance_protocol         = "http"
     lb_port                   = 443
     lb_protocol               = "https"
     ssl_certificate_id        = "${lookup(var.ssl_certificates, "analytics-us-west-1")}"
