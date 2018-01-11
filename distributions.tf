@@ -89,3 +89,21 @@ module "newfirefox-mozilla-community" {
   comment             = "github.com/mozilla/parsys/issues/241"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
 }
+
+module "roadshow-rustbr-org" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "rust-br.github.io"
+  origin_path         = "/2018-roadshow"
+  origin_id           = "gh-pages-roadshow-rust-org"
+  alias               = "roadshow.rustbr.org"
+  comment             = "bug 1419248"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+} 
