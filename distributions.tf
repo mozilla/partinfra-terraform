@@ -138,3 +138,21 @@ module "newfirefox-mozilla-community" {
         x-xss-protection-enabled = true
     }
 }
+
+module "roadshow-rustbr-org" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "rust-br.github.io"
+  origin_path         = "/2018-roadshow"
+  origin_id           = "gh-pages-roadshow-rust-org"
+  alias               = "roadshow.rustbr.org"
+  comment             = "bug 1419248"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "roadshow-rustbr-org-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+}
