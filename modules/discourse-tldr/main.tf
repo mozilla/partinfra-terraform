@@ -1,9 +1,9 @@
 variable "environment" {}
 variable "discourse_tldr_bucket" {
-  default = "discourse-tldr"
+  default = "discourse-tldr-lambda"
 }
 variable "discourse_tldr_bucket_arn" {
-  default = "arn:aws:s3:::discourse-tldr"
+  default = "arn:aws:s3:::discourse-tldr-lambda"
 }
 variable "discourse_tldr_api_key" {}
 variable "discourse_tldr_api_username" {}
