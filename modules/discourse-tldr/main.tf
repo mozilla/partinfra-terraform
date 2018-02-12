@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "discourse-tldr-assume-role" {
 data "aws_iam_policy_document" "discourse-tldr-role-policy" {
   statement {
     actions = ["s3:GetObject"]
-    resources = ["${var.discourse_tldr_bucket_arn}"]
+    resources = ["${var.discourse_tldr_bucket_arn}", "${var.discourse_tldr_bucket_arn}/*"]
   }
 }
 
@@ -68,8 +68,8 @@ resource "aws_lambda_function" "discourse-tldr" {
     }
   }
 
-  memory_size = 128
-  timeout = 10
+  memory_size = 256
+  timeout = 20
   publish = true
 }
 
