@@ -54,7 +54,7 @@ resource "aws_lambda_function" "discourse-tldr" {
   s3_bucket = "${var.discourse_tldr_bucket}"
   s3_key = "lambda-functions/${var.discourse_tldr_version}/post-newsletter.zip"
 
-  role = "${aws_iam_role.headers-function.arn}"
+  role = "${aws_iam_role.discourse-tldr.arn}"
   handler = "index.handler"
   runtime = "nodejs6.10"
 
@@ -88,7 +88,7 @@ resource "aws_ses_receipt_rule" "discourse-tldr" {
   }
 
   lambda_action {
-    function_arn = "${aws_lambda_function.disocurse-tldr.arn}"
+    function_arn = "${aws_lambda_function.discourse-tldr.arn}"
     invocation_type = "Event"
     position = 2
   }
