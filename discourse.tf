@@ -1,3 +1,5 @@
+variable "discourse_staging_tldr_api_key" {}
+
 module "discourse-production" {
     source                              = "./modules/discourse"
 

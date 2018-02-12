@@ -61,5 +61,3 @@ variable "unmanaged_role_arns" {
         mozdef-logging = "arn:aws:iam::484535289196:policy/SnsMozdefLogsFullAccess"
     }
 }
-
-variable "discourse_staging_tldr_api_key" {}
