@@ -1,3 +1,4 @@
+variable "discourse_production_tldr_api_key" {}
 variable "discourse_staging_tldr_api_key" {}
 
 module "discourse-production" {
@@ -24,6 +25,16 @@ module "discourse-staging" {
     fqdn                                = "discourse-staging.production.paas.mozilla.community"
     ssl_certificate                     = "${lookup(var.ssl_certificates, "community-sites-elb-${var.aws_region}")}"
     iam-assume-role-policy              = "${data.aws_iam_policy_document.containers-assume-role-policy.json}"
+}
+
+module "discourse-production-tldr" {
+    source                              = "./modules/discourse-tldr"
+
+    environment                         = "production"
+    discourse_tldr_api_key              = "${var.discourse_production_tldr_api_key}"
+    discourse_tldr_api_username         = "tldr"
+    discourse_tldr_category             = "256"
+    discourse_tldr_url                  = "https://discourse.mozilla.org"
 }
 
 module "discourse-staging-tldr" {
