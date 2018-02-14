@@ -156,3 +156,21 @@ module "roadshow-rustbr-org" {
         x-xss-protection-enabled = true
     }
 }
+
+module livro-rustbr-org" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "rust-br.github.io"
+  origin_path         = "/rust-book-pt-br"
+  origin_id           = "gh-pages-livro-rust-org"
+  alias               = "livro.rustbr.org"
+  comment             = "bug 1437724"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "livro-rustbr-org-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+}
