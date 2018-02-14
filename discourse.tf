@@ -33,7 +33,7 @@ module "discourse-production-tldr" {
     environment                         = "production"
     discourse_tldr_api_key              = "${var.discourse_production_tldr_api_key}"
     discourse_tldr_api_username         = "tldr"
-    discourse_tldr_category             = "256"
+    discourse_tldr_category             = "253"
     discourse_tldr_url                  = "https://discourse.mozilla.org"
 }
 
