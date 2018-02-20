@@ -156,3 +156,21 @@ module "roadshow-rustbr-org" {
         x-xss-protection-enabled = true
     }
 }
+
+module "training-mozilla-community" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "emmairwin.github.io"
+  origin_path         = "/learning-open-source"
+  origin_id           = "gh-pages-training-mozilla-community"
+  alias               = "training.mozilla.community"
+  comment             = "mozilla/coss/issues/765"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+}
