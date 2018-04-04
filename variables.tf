@@ -44,6 +44,7 @@ variable "ssl_certificates" {
     mesos-elb-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/b8dca075-66a1-48fc-9223-f753a504b4f2"
     analytics-us-west-1 = "arn:aws:acm:us-west-1:484535289196:certificate/b09c28f0-a98e-409c-b614-be356e9c593c"
     roadshow-rustbr-org-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/1e3144e9-a472-4be5-93d9-eceb0d21b2bf"
+    livro-rustbr-org-us-east-1 = "arn:aws:acm:us-east-1:484535289196:certificate/306f084e-d312-45f2-939b-6b8ef2b51f4e"
   }
 }
 
