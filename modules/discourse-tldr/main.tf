@@ -10,7 +10,7 @@ variable "discourse_tldr_api_username" {}
 variable "discourse_tldr_category" {}
 variable "discourse_tldr_url" {}
 variable "discourse_tldr_version" {
-  default = "v1"
+  default = "v2"
 }
 
 data "aws_iam_policy_document" "discourse-tldr-assume-role" {
