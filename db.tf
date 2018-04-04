@@ -107,7 +107,7 @@ resource "aws_db_instance" "postgres-shared-db" {
     identifier                = "postgres-shared-db"
     allocated_storage         = 50
     engine                    = "postgres"
-    engine_version            = "9.5.4"
+    engine_version            = "9.5.10"
     instance_class            = "db.m4.xlarge"
     publicly_accessible       = false
     backup_retention_period   = 7
