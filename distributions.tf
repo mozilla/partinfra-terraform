@@ -139,6 +139,24 @@ module "newfirefox-mozilla-community" {
     }
 }
 
+module "voice-sprint-mozilla-community" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "mozilla.github.io"
+  origin_path         = "/common-voice-global-sprint"
+  origin_id           = "gh-pages-common-voice-global-sprint"
+  alias               = "voice-sprint.mozilla.community"
+  comment             = "github.com/mozilla/parsys/issues/320"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+}
+
 module "roadshow-rustbr-org" {
   source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
