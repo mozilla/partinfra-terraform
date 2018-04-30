@@ -160,7 +160,7 @@ resource "aws_db_instance" "mysql-mozillians-db" {
     allocated_storage    = 5
     engine               = "mysql"
     engine_version       = "5.6.27"
-    instance_class       = "db.t2.small"
+    instance_class       = "db.t2.medium"
     publicly_accessible  = false
     backup_retention_period = 14
     apply_immediately    = true

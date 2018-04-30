@@ -50,6 +50,15 @@ data "aws_iam_policy_document" "policy-document" {
 
     statement {
         effect = "Allow"
+        actions = ["s3:*"]
+        resources = [
+            "arn:aws:s3:::mozillians-orgchart/*",
+            "arn:aws:s3:::mozillians-orgchart"
+        ]
+    }
+
+    statement {
+        effect = "Allow"
         actions = [
             "sts:AssumeRole"
         ]
