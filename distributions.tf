@@ -157,6 +157,24 @@ module "voice-sprint-mozilla-community" {
     }
 }
 
+module "support-sprint-mozilla-community" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "mozilla.github.io"
+  origin_path         = "/sumo-playstore-campaign"
+  origin_id           = "gh-pages-sumo-playstore-campaign"
+  alias               = "supportsprint.mozilla.community"
+  comment             = "github.com/mozilla/parsys/issues/360"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+}
+
 module "roadshow-rustbr-org" {
   source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
