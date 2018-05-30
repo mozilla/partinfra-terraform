@@ -80,7 +80,7 @@ resource "aws_ses_receipt_rule" "discourse-tldr" {
   enabled       = true
   scan_enabled  = true
   after         = "innoprize-hostmaster-email"
-  tls_policy    = "Require"
+  tls_policy    = "Optional"
 
   s3_action {
     bucket_name = "${var.discourse_tldr_bucket}"
