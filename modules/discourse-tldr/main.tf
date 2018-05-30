@@ -10,7 +10,7 @@ variable "discourse_tldr_api_username" {}
 variable "discourse_tldr_category" {}
 variable "discourse_tldr_url" {}
 variable "discourse_tldr_version" {
-  default = "v3"
+  default = "v4"
 }
 
 data "aws_iam_policy_document" "discourse-tldr-assume-role" {
@@ -56,7 +56,7 @@ resource "aws_lambda_function" "discourse-tldr" {
 
   role = "${aws_iam_role.discourse-tldr.arn}"
   handler = "index.handler"
-  runtime = "nodejs6.10"
+  runtime = "nodejs8.10"
 
   environment {
     variables = {
