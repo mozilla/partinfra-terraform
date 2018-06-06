@@ -26,6 +26,18 @@ data "aws_iam_policy_document" "policy-document" {
     statement {
         effect  = "Allow"
         actions = [
+            "s3:PutObject",
+        ]
+
+        resources = [
+            "${aws_s3_bucket.discourse-backup.arn}",
+            "${aws_s3_bucket.discourse-backup.arn}/*",
+        ]
+    }
+
+    statement {
+        effect  = "Allow"
+        actions = [
             "ses:SendRawEmail",
         ]
 
