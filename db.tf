@@ -107,7 +107,7 @@ resource "aws_db_instance" "postgres-shared-db" {
     identifier                = "postgres-shared-db"
     allocated_storage         = 50
     engine                    = "postgres"
-    engine_version            = "9.5.4"
+    engine_version            = "9.5.10"
     instance_class            = "db.m4.xlarge"
     publicly_accessible       = false
     backup_retention_period   = 7
@@ -160,7 +160,7 @@ resource "aws_db_instance" "mysql-mozillians-db" {
     allocated_storage    = 5
     engine               = "mysql"
     engine_version       = "5.6.27"
-    instance_class       = "db.t2.small"
+    instance_class       = "db.t2.medium"
     publicly_accessible  = false
     backup_retention_period = 14
     apply_immediately    = true

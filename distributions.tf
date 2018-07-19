@@ -139,6 +139,42 @@ module "newfirefox-mozilla-community" {
     }
 }
 
+module "voice-sprint-mozilla-community" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "mozilla.github.io"
+  origin_path         = "/common-voice-global-sprint"
+  origin_id           = "gh-pages-common-voice-global-sprint"
+  alias               = "voice-sprint.mozilla.community"
+  comment             = "github.com/mozilla/parsys/issues/320"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+}
+
+module "support-sprint-mozilla-community" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "mozilla.github.io"
+  origin_path         = "/sumo-playstore-campaign"
+  origin_id           = "gh-pages-sumo-playstore-campaign"
+  alias               = "supportsprint.mozilla.community"
+  comment             = "github.com/mozilla/parsys/issues/360"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+}
+
 module "roadshow-rustbr-org" {
   source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
@@ -166,6 +202,24 @@ module "training-mozilla-community" {
   alias               = "training.mozilla.community"
   comment             = "mozilla/coss/issues/765"
   acm_certificate_arn = "${lookup(var.ssl_certificates, "mesos-elb-${var.aws_region}")}"
+  headers {
+        enabled = true
+        hsts-enabled = true
+        x-content-type-enabled = true
+        x-frame-options-enabled = true
+        x-xss-protection-enabled = true
+    }
+}
+
+module "livro-rustbr-org" {
+  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
+
+  origin_domain_name  = "rust-br.github.io"
+  origin_path         = "/rust-book-pt-br"
+  origin_id           = "gh-pages-livro-rust-org"
+  alias               = "livro.rustbr.org"
+  comment             = "bug 1437724"
+  acm_certificate_arn = "${lookup(var.ssl_certificates, "livro-rustbr-org-${var.aws_region}")}"
   headers {
         enabled = true
         hsts-enabled = true

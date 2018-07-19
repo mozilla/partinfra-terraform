@@ -44,9 +44,10 @@ data "aws_iam_policy_document" "admin-access-assume-role-policy" {
         principals {
             type = "AWS"
             identifiers = [
-                "arn:aws:iam::${var.aws_account_id}:user/yalam96",
                 "arn:aws:iam::${var.aws_account_id}:user/nemo",
-                "arn:aws:iam::${var.aws_account_id}:user/akatsoulas"
+                "arn:aws:iam::${var.aws_account_id}:user/akatsoulas",
+                "arn:aws:iam::${var.aws_account_id}:user/fmerz",
+                "arn:aws:iam::${var.aws_account_id}:user/leo"
             ]
         }
 

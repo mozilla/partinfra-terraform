@@ -10,7 +10,7 @@ variable "discourse_tldr_api_username" {}
 variable "discourse_tldr_category" {}
 variable "discourse_tldr_url" {}
 variable "discourse_tldr_version" {
-  default = "v1"
+  default = "v4"
 }
 
 data "aws_iam_policy_document" "discourse-tldr-assume-role" {
@@ -56,7 +56,7 @@ resource "aws_lambda_function" "discourse-tldr" {
 
   role = "${aws_iam_role.discourse-tldr.arn}"
   handler = "index.handler"
-  runtime = "nodejs6.10"
+  runtime = "nodejs8.10"
 
   environment {
     variables = {
@@ -80,7 +80,7 @@ resource "aws_ses_receipt_rule" "discourse-tldr" {
   enabled       = true
   scan_enabled  = true
   after         = "innoprize-hostmaster-email"
-  tls_policy    = "Require"
+  tls_policy    = "Optional"
 
   s3_action {
     bucket_name = "${var.discourse_tldr_bucket}"
