@@ -61,7 +61,7 @@ resource "aws_instance" "mcws-confluence" {
     provider          = "aws.us-east-1"
     ami               = "ami-759bc50a"
     instance_type     = "t2.medium"
-    key_name          = "ansible"
+    key_name          = "mcws"
     security_groups   = ["mcws-confluence-public-ec2-sg"]
     disable_api_termination = true
 
