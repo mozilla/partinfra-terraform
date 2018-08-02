@@ -58,6 +58,7 @@ resource "aws_security_group_rule" "confluence-public-allow-all-egress-udp" {
 }
 
 resource "aws_instance" "mcws-confluence" {
+    provider          = "aws.us-east-1"
     ami               = "ami-759bc50a"
     instance_type     = "t2.medium"
     key_name          = "ansible"
