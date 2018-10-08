@@ -12,6 +12,7 @@ variable "aws_amis" {
     us-east-1-ubuntu-16-04 = "ami-80861296"
     jenkins-2017-10-04 = "ami-9f1bdee5"
     bitergia-2017-10-16 = "ami-80b381e0"
+    bitergia-2018-10-01 = "ami-0f0674cb683fcc1f7"
   }
 }
 
