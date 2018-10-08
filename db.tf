@@ -73,7 +73,7 @@ resource "aws_security_group_rule" "shared-rds-sg-allowpostgresfromstaging" {
 resource "aws_db_instance" "mysql-shared-db" {
     allocated_storage    = 40
     engine               = "mysql"
-    engine_version       = "5.6.27"
+    engine_version       = "5.6.40"
     instance_class       = "db.t2.small"
     publicly_accessible  = false
     backup_retention_period = 7
