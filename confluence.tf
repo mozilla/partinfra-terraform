@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "us-east-2"
+}
+
 resource "aws_security_group" "mcws-confluence-public-ec2-sg" {
     name        = "mcws-confluence-public-ec2-sg"
     description = "MCWS Confluence public SG"
@@ -58,8 +62,8 @@ resource "aws_security_group_rule" "confluence-public-allow-all-egress-udp" {
 }
 
 resource "aws_instance" "mcws-confluence" {
-    provider          = "aws.us-east-1"
-    ami               = "ami-759bc50a"
+    provider          = "aws.us-east-2"
+    ami               = "ami-0f65671a86f061fcd"
     instance_type     = "t2.medium"
     key_name          = "mcws"
     security_groups   = ["mcws-confluence-public-ec2-sg"]
