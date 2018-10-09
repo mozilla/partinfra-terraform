@@ -271,7 +271,7 @@ resource "aws_instance" "bitergia-ec2-new" {
 resource "aws_instance" "bitergia-ec2-web" {
   provider                 = "aws.us-west-1"
   ami                      = "${lookup(var.aws_amis, "bitergia-2018-10-01")}"
-  instance_type            = "t3.medium"
+  instance_type            = "r5.large"
   disable_api_termination  = false
   key_name                 = "bitergia-231b206d2e4a"
   vpc_security_group_ids   = ["${aws_security_group.bitergia-ec2-sg.id}"]
@@ -293,7 +293,7 @@ resource "aws_instance" "bitergia-ec2-web" {
 resource "aws_instance" "bitergia-ec2-data" {
   provider                 = "aws.us-west-1"
   ami                      = "${lookup(var.aws_amis, "bitergia-2018-10-01")}"
-  instance_type            = "t3.medium"
+  instance_type            = "r5.xlarge"
   disable_api_termination  = false
   key_name                 = "bitergia-231b206d2e4a"
   vpc_security_group_ids   = ["${aws_security_group.bitergia-ec2-sg.id}"]
