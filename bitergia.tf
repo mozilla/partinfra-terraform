@@ -148,6 +148,23 @@ resource "aws_security_group_rule" "bitergia-rds-sg-allowrdsfromec2" {
     security_group_id        = "${aws_security_group.bitergia-rds-sg.id}"
 }
 
+resource "aws_security_group" "bitergia-es-sg" {
+  provider                 = "aws.us-west-1"
+  name                     = "bitergia-es-sg"
+  description              = "Bitergia ES SG"
+  vpc_id                   = "${aws_vpc.bitergia-metrics-vpc.id}"
+}
+
+resource "aws_security_group_rule" "bitergia-es-sg-allowhttpsfromec2" {
+  provider                 = "aws.us-west-1"
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  source_security_group_id = "${aws_security_group.bitergia-ec2-sg.id}"
+  security_group_id        = "${aws_security_group.bitergia-es-sg.id}"
+}
+
 resource "aws_security_group_rule" "bitergia-ec2-sg-allowallfromvpc" {
     provider                 = "aws.us-west-1"
     type                     = "egress"
@@ -249,6 +266,50 @@ resource "aws_instance" "bitergia-ec2-new" {
         env                  = "production"
         project              = "metrics"
     }
+}
+
+resource "aws_instance" "bitergia-ec2-web" {
+  provider                 = "aws.us-west-1"
+  ami                      = "${lookup(var.aws_amis, "bitergia-2018-10-01")}"
+  instance_type            = "t3.medium"
+  disable_api_termination  = false
+  key_name                 = "bitergia-231b206d2e4a"
+  vpc_security_group_ids   = ["${aws_security_group.bitergia-ec2-sg.id}"]
+  subnet_id                = "${aws_subnet.bitergia-metrics-public-subnet.id}"
+
+  root_block_device {
+    volume_type            = "gp2"
+    volume_size            = 100
+  }
+
+  tags {
+    Name                 = "bitergia-web"
+    app                  = "bitergia"
+    env                  = "production"
+    project              = "metrics"
+  }
+}
+
+resource "aws_instance" "bitergia-ec2-data" {
+  provider                 = "aws.us-west-1"
+  ami                      = "${lookup(var.aws_amis, "bitergia-2018-10-01")}"
+  instance_type            = "t3.medium"
+  disable_api_termination  = false
+  key_name                 = "bitergia-231b206d2e4a"
+  vpc_security_group_ids   = ["${aws_security_group.bitergia-ec2-sg.id}"]
+  subnet_id                = "${aws_subnet.bitergia-metrics-public-subnet.id}"
+
+  root_block_device {
+    volume_type            = "gp2"
+    volume_size            = 1000
+  }
+
+  tags {
+    Name                 = "bitergia-data"
+    app                  = "bitergia"
+    env                  = "production"
+    project              = "metrics"
+  }
 }
 
 # ELB
@@ -402,5 +463,43 @@ resource "aws_elasticsearch_domain" "bitergia-metrics-es" {
 
     lifecycle {
       ignore_changes                    = ["access_policies"]
+    }
+}
+
+resource "aws_elasticsearch_domain" "bitergia-metrics-es-6" {
+    provider                          = "aws.us-west-1"
+    domain_name                       = "bitergia-metrics-es-6"
+    elasticsearch_version             = "6.2"
+
+    vpc_options {
+      security_group_ids = ["${aws_security_group.bitergia-es-sg.id}"]
+      subnet_ids = [
+        "${aws_subnet.bitergia-metrics-private-subnet-1a.id}",
+        "${aws_subnet.bitergia-metrics-private-subnet-1b.id}"
+      ]
+    }
+
+    ebs_options {
+        ebs_enabled                   = true
+        volume_type                   = "gp2"
+        volume_size                   = 300
+    }
+
+    cluster_config {
+        instance_count                = 3
+        instance_type                 = "m4.xlarge.elasticsearch"
+        dedicated_master_enabled      = false
+        zone_awareness_enabled        = false
+    }
+
+    snapshot_options {
+        automated_snapshot_start_hour = 23
+    }
+
+    tags {
+      Domain                          = "bitergia-metrics-es-6"
+      app                             = "elasticsearch"
+      env                             = "production"
+      project                         = "metrics"
     }
 }
