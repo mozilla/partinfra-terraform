@@ -478,8 +478,7 @@ resource "aws_elasticsearch_domain" "bitergia-metrics-es-6" {
     vpc_options {
       security_group_ids = ["${aws_security_group.bitergia-es-sg.id}"]
       subnet_ids = [
-        "${aws_subnet.bitergia-metrics-private-subnet-1a.id}",
-        "${aws_subnet.bitergia-metrics-private-subnet-1b.id}"
+        "${aws_subnet.bitergia-metrics-private-subnet-1a.id}"
       ]
     }
 
