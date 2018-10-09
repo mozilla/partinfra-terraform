@@ -34,24 +34,6 @@ module "campus-mozilla-community" {
     }
 }
 
-module "badges-mozilla-org" {
-  source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
-
-  origin_domain_name  = "s3.amazonaws.com"
-  origin_path         = "/badges.mozilla.org"
-  origin_id           = "s3-badges-mozilla-org"
-  alias               = "badges.mozilla.org"
-  comment             = "Bug 1230266"
-  acm_certificate_arn = "${lookup(var.ssl_certificates, "mozilla-org-elb-${var.aws_region}")}"
-  headers {
-        enabled = true
-        hsts-enabled = true
-        x-content-type-enabled = true
-        x-frame-options-enabled = true
-        x-xss-protection-enabled = true
-    }
-}
-
 module "mozillaindia-org" {
   source              = "git://github.com/mozilla/partinfra-terraform-cloudfrontssl.git?ref=secureheaders"
 
