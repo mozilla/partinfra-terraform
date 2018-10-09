@@ -49,7 +49,7 @@ resource "aws_security_group_rule" "confluence-public-allow-all-egress-tcp" {
     type              = "egress"
     protocol          = "tcp"
     from_port         = "0"
-    to_port           = "0"
+    to_port           = "65535"
     cidr_blocks       = ["0.0.0.0/0"]
     security_group_id = "${aws_security_group.mcws-confluence-public-ec2-sg.id}"
 }
@@ -59,7 +59,7 @@ resource "aws_security_group_rule" "confluence-public-allow-all-egress-udp" {
     type              = "egress"
     protocol          = "udp"
     from_port         = "0"
-    to_port           = "0"
+    to_port           = "65535"
     cidr_blocks       = ["0.0.0.0/0"]
     security_group_id = "${aws_security_group.mcws-confluence-public-ec2-sg.id}"
 }
