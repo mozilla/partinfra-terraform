@@ -79,4 +79,10 @@ module "discourse-cdn" {
   alias               = "cdn-${var.environment}.discourse.mozilla-community.org"
   comment             = "Discourse ${var.environment} CDN"
   acm_certificate_arn = "${var.ssl_certificate}"
+  custom_error_response = [
+    {
+      error_caching_min_ttl = 0
+      error_code = 404
+    }
+  ]
 }

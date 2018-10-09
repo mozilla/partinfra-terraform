@@ -159,7 +159,7 @@ resource "aws_security_group_rule" "mozillians-rds-sg-allowmysqlfromprod" {
 resource "aws_db_instance" "mysql-mozillians-db" {
     allocated_storage    = 5
     engine               = "mysql"
-    engine_version       = "5.6.27"
+    engine_version       = "5.6.40"
     instance_class       = "db.t2.medium"
     publicly_accessible  = false
     backup_retention_period = 14
