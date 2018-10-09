@@ -466,6 +466,10 @@ resource "aws_elasticsearch_domain" "bitergia-metrics-es" {
     }
 }
 
+resource "aws_iam_service_linked_role" "es" {
+  aws_service_name = "es.amazonaws.com"
+}
+
 resource "aws_elasticsearch_domain" "bitergia-metrics-es-6" {
     provider                          = "aws.us-west-1"
     domain_name                       = "bitergia-metrics-es-6"
