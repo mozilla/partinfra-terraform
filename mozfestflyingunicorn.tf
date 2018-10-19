@@ -1,4 +1,4 @@
-resource "aws_security_group" "mcws-confluence-public-ec2-sg" {
+resource "aws_security_group" "community-mozfestflyingunicorn-public-ec2-sg" {
     provider    = "aws.us-east-2"
     name        = "community-mozfestflyingunicorn-public-ec2-sg"
     description = "MozFest Flying Unicorn public SG"
