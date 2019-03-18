@@ -83,6 +83,18 @@ module "discourse-cdn" {
     {
       error_caching_min_ttl = 0
       error_code = 404
+    },
+    {
+      error_caching_min_ttl = 0
+      error_code = 502
+    },
+    {
+      error_caching_min_ttl = 0
+      error_code = 503
+    },
+    {
+      error_caching_min_ttl = 0
+      error_code = 504
     }
   ]
 }
