@@ -11,7 +11,6 @@ module "activate-mozilla-community" {
         enabled = true
         hsts-enabled = true
         x-content-type-enabled = true
-        x-frame-options-enabled = true
         x-xss-protection-enabled = true
     }
 }
