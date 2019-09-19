@@ -68,7 +68,7 @@ resource "aws_instance" "mcws-confluence" {
     provider          = "aws.us-east-2"
     provider          = "aws.us-east-2"
     ami               = "ami-0f65671a86f061fcd"
-    instance_type     = "t2.medium"
+    instance_type     = "t2.large"
     key_name          = "mcws"
     security_groups   = ["mcws-confluence-public-ec2-sg"]
     disable_api_termination = true
